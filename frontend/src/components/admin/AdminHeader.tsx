@@ -77,8 +77,8 @@ export function AdminHeader() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
         {/* Brand / Title */}
         <div className="flex items-center gap-3">
-          <Link href="/" className="w-9 h-9 rounded-xl bg-blue-700 flex items-center justify-center text-white shadow-xs shrink-0 hover:bg-blue-800 transition-colors" title="Home">
-            <Building2 className="w-5 h-5" />
+          <Link href="/" className="h-10 rounded-xl bg-white flex items-center justify-center p-1 border border-slate-200 shadow-xs shrink-0 hover:border-emerald-600 transition-colors" title="GraminVikas Home">
+            <img src="/logo.png" alt="GraminVikas Logo" className="h-8 w-auto object-contain" />
           </Link>
           <div>
             <div className="flex items-center gap-2">

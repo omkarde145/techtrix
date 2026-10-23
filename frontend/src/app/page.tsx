@@ -60,6 +60,11 @@ export default function HomePage() {
     <div className="flex-1 flex flex-col justify-between max-w-7xl w-full mx-auto px-4 py-6 sm:py-10">
       {/* Top National Branding Strip */}
       <div className="text-center space-y-4 max-w-3xl mx-auto">
+        {/* Official Brand Logo */}
+        <div className="flex justify-center">
+          <img src="/logo.png" alt="GraminVikas Logo" className="h-20 sm:h-28 w-auto object-contain drop-shadow-sm" />
+        </div>
+
         {/* Tricolor Accent Pill */}
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 shadow-xs text-xs font-semibold text-slate-700">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>

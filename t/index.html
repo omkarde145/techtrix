@@ -14,8 +14,8 @@
     /* Government Header */
     .gov-topbar { background: #022c22; color: #a7f3d0; font-size: 11px; padding: 4px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #064e3b; }
     .header-main { background: #064e3b; color: white; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #047857; }
-    .brand-section { display: flex; align-items: center; gap: 10px; }
-    .brand-logo { font-size: 26px; }
+    .brand-section { display: flex; align-items: center; gap: 12px; }
+    .brand-logo-img { height: 44px; width: auto; max-width: 140px; object-fit: contain; background: white; padding: 3px 8px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.2); display: block; }
     .brand-title { font-size: 17px; font-weight: 800; letter-spacing: 0.3px; }
     .brand-subtitle { font-size: 11px; color: #6ee7b7; font-weight: 500; }
     
@@ -82,10 +82,10 @@
   <!-- Main Government Header -->
   <div class="header-main">
     <div class="brand-section">
-      <div class="brand-logo">🏛️</div>
+      <img src="logo.png" alt="GraminVikas Logo" class="brand-logo-img" onerror="this.onerror=null; this.src='icon-192.png';">
       <div>
         <div class="brand-title">GraminVikas 360 v2.0</div>
-        <div class="brand-subtitle">PMAY-G Rural Housing & Panchayat Public Works Platform</div>
+        <div class="brand-subtitle">Digital Monitoring & Panchayat Development Platform</div>
       </div>
     </div>
     <div id="authStatusBadge">
