@@ -30,6 +30,7 @@ import { AiVisionAssistantCard } from '@/components/field/AiVisionAssistantCard'
 import { PlaqueOcrScannerModal } from '@/components/field/PlaqueOcrScannerModal';
 import { STAGE_PHOTOS } from '@/lib/db/seedData';
 import { useApp } from '@/lib/context/AppContext';
+import { detectPlaqueAndCoPresence } from '@/lib/engines/plaqueOcrEngine';
 
 export const DEMO_STAGE_PHOTOS: Record<StageType, { path: string; label: string }> = {
   foundation: {
@@ -388,6 +389,10 @@ export function CameraCaptureModal({
       // 3. Edge AI Vision Stage & Structural Analysis
       const aiResult = await analyzeConstructionPhoto(stage, compressed.dataUrl, sourceHint);
       setAiAnalysis(aiResult);
+
+      // 4. Beneficiary Co-Presence & Wall Plaque Real Image Analysis
+      const plaqueRes = await detectPlaqueAndCoPresence(beneficiary, compressed.dataUrl);
+      setPlaqueResult(plaqueRes);
     } catch (err) {
       console.error('Pipeline error:', err);
     } finally {
@@ -656,9 +661,19 @@ export function CameraCaptureModal({
                 <button
                   type="button"
                   onClick={() => setIsPlaqueModalOpen(true)}
-                  className="w-full py-2.5 px-3 rounded-xl bg-amber-50 border border-amber-300 hover:bg-amber-100 text-amber-900 text-xs font-bold flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-xs"
+                  className={`w-full py-2.5 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-xs ${
+                    plaqueResult?.beneficiaryFaceDetected
+                      ? 'bg-emerald-50 border-emerald-300 hover:bg-emerald-100 text-emerald-900'
+                      : 'bg-amber-50 border-amber-300 hover:bg-amber-100 text-amber-900'
+                  }`}
                 >
-                  <span>{plaqueResult ? `✓ Plaque & Citizen Co-Presence Verified (${plaqueResult.matchScore}%)` : '🔍 Scan Wall Plaque & Citizen Co-Presence'}</span>
+                  <span>
+                    {plaqueResult
+                      ? (plaqueResult.beneficiaryFaceDetected
+                          ? `✓ Beneficiary Co-Presence Verified (${plaqueResult.coPresenceScore}%)`
+                          : `⚠️ Co-Presence Not Detected (No Human in Photo)`)
+                      : '🔍 Scan Wall Plaque & Citizen Co-Presence'}
+                  </span>
                 </button>
               </div>
             </div>
@@ -956,6 +971,7 @@ export function CameraCaptureModal({
         isOpen={isPlaqueModalOpen}
         onClose={() => setIsPlaqueModalOpen(false)}
         onVerified={(res) => setPlaqueResult(res)}
+        imageSrc={watermarkedPreview || capturedRaw}
       />
     </div>
   );

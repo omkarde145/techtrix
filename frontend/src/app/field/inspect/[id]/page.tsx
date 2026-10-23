@@ -523,10 +523,14 @@ export default function FieldInspectionDetailPage() {
               <div className="w-9 h-5 bg-slate-300 peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-700"></div>
             </label>
           </div>
-          {coPresenceVerified && (
+          {coPresenceVerified ? (
             <div className="flex items-center gap-1.5 text-[11px] text-emerald-800 bg-emerald-50 p-2 rounded-lg border border-emerald-200 font-medium">
               <Check className="w-3.5 h-3.5 text-emerald-600" />
-              <span>Face presence &amp; wall plaque matched with 96% confidence</span>
+              <span>Face presence &amp; wall plaque verified on site (Anti-Ghost House Passed)</span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1.5 text-[11px] text-amber-800 bg-amber-50 p-2 rounded-lg border border-amber-200 font-medium">
+              <span>⚠️ Citizen co-presence unverified. Photo must contain beneficiary to prevent ghost-house fraud.</span>
             </div>
           )}
         </div>
