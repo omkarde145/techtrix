@@ -52,7 +52,7 @@ GraminVikas 360 v2.0 is an enterprise-grade, offline-first GovTech platform engi
 
 ---
 
-### Option A: 1-Click Launch on macOS (Recommended)
+### Option A: 1-Click Launch on macOS (Recommended for Mac)
 Simply double-click the **`Launch.command`** file in this folder:
 ```bash
 ./Launch.command
@@ -66,7 +66,21 @@ Simply double-click the **`Launch.command`** file in this folder:
 
 ---
 
-### Option B: Manual Terminal Execution
+### Option B: 1-Click Launch on Windows (Recommended for Windows)
+Simply double-click the **`Launch.bat`** file in this folder.
+
+`Launch.bat` automatically:
+1. Validates **Node.js** and **npm** installation in your PATH.
+2. Auto-installs dependencies if needed (`npm install`).
+3. Compiles the TypeScript backend microservice.
+4. Auto-detects your local LAN / Wi-Fi IP address for smartphone testing.
+5. Starts the backend microservice on port 5001.
+6. Opens your default web browser directly to `http://localhost:3000`.
+7. Starts the frontend Next.js server bound to all network interfaces (`0.0.0.0`).
+
+---
+
+### Option C: Manual Terminal Execution
 ```bash
 # 1. Install all dependencies (handled via npm workspaces)
 npm install
