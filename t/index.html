@@ -1347,8 +1347,7 @@
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      alert('✅ Offline Audit JSON Package downloaded successfully!
-This encrypted file can be transferred to BDO via USB or Bluetooth.');
+      alert('✅ Offline Audit JSON Package downloaded successfully!\nThis encrypted file can be transferred to BDO via USB or Bluetooth.');
     }
 
     // 6. CITIZEN PUBLIC TRACKER
@@ -1403,10 +1402,7 @@ This encrypted file can be transferred to BDO via USB or Bluetooth.');
       const q = document.getElementById('citQuery').value.trim();
       const b = beneficiaries.find(x => x.id === q || x.name.toLowerCase().includes(q.toLowerCase()));
       if (b) {
-        alert('Details retrieved for ' + b.name + ' (' + b.id + ')
-Stage: ' + b.stage.toUpperCase() + '
-Sanction: ₹' + b.sanction.toLocaleString('en-IN') + '
-Disbursed: ₹' + b.paid.toLocaleString('en-IN'));
+        alert(`Details retrieved for ${b.name} (${b.id})\nStage: ${b.stage.toUpperCase()}\nSanction: ₹${b.sanction.toLocaleString('en-IN')}\nDisbursed: ₹${b.paid.toLocaleString('en-IN')}`);
       } else {
         alert('Beneficiary ID ' + q + ' verified. Status: In Good Standing.');
       }
@@ -1473,8 +1469,7 @@ ${items.map(item => `    <Transaction>
       <InspectionRecordId>${item.id}</InspectionRecordId>
       <DigitalSignature>${item.sig || 'NIC-ECDSA-P256-AUTHENTICATED'}</DigitalSignature>
       <VerificationStatus>APPROVED_BY_BDO</VerificationStatus>
-    </Transaction>`).join('
-')}
+    </Transaction>`).join('\n')}
   </Transactions>
 </FTOBatch>`;
 
