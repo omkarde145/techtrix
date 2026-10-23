@@ -1,0 +1,58 @@
+# Dependencies
+node_modules/
+node_modules
+*/node_modules/
+*/node_modules
+.pnp
+.pnp.js
+
+# Production & Build Outputs
+.next/
+*/.next/
+dist/
+*/dist/
+out/
+build/
+
+# Next.js Cache
+.next/cache/
+
+# Debug Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Environment Files
+.env
+.env*.local
+!.env.example
+
+# Vercel & Turbo
+.vercel
+.turbo
+
+# TypeScript Build Info
+*.tsbuildinfo
+
+# OS Metadata
+.DS_Store
+*/.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE & Editors
+.vscode/
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# Temporary Files
+tmp/
+temp/
