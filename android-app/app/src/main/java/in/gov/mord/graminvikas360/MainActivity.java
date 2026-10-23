@@ -2,11 +2,14 @@ package in.gov.mord.graminvikas360;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.webkit.GeolocationPermissions;
 import android.webkit.PermissionRequest;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -18,6 +21,8 @@ import androidx.core.content.ContextCompat;
 public class MainActivity extends AppCompatActivity {
     private WebView webView;
     private static final int PERM_REQUEST_CODE = 101;
+    private static final int FILECHOOSER_RESULTCODE = 102;
+    private ValueCallback<Uri[]> mUploadMessage;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -33,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
         settings.setDatabaseEnabled(true);
         settings.setAllowFileAccess(true);
         settings.setAllowContentAccess(true);
+        settings.setAllowFileAccessFromFileURLs(true);
+        settings.setAllowUniversalAccessFromFileURLs(true);
         settings.setGeolocationEnabled(true);
         settings.setMediaPlaybackRequiresUserGesture(false);
         settings.setCacheMode(WebSettings.LOAD_DEFAULT);
@@ -49,6 +56,22 @@ public class MainActivity extends AppCompatActivity {
                     request.grant(request.getResources());
                 }
             }
+
+            @Override
+            public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+                if (mUploadMessage != null) {
+                    mUploadMessage.onReceiveValue(null);
+                }
+                mUploadMessage = filePathCallback;
+                try {
+                    Intent intent = fileChooserParams.createIntent();
+                    startActivityForResult(intent, FILECHOOSER_RESULTCODE);
+                } catch (Exception e) {
+                    mUploadMessage = null;
+                    return false;
+                }
+                return true;
+            }
         });
 
         webView.setWebViewClient(new WebViewClient());
@@ -58,6 +81,18 @@ public class MainActivity extends AppCompatActivity {
 
         // Load offline application from assets
         webView.loadUrl("file:///android_asset/index.html");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == FILECHOOSER_RESULTCODE) {
+            if (mUploadMessage != null) {
+                mUploadMessage.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, data));
+                mUploadMessage = null;
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     private void checkPermissions() {

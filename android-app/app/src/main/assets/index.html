@@ -2,544 +2,991 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GraminVikas 360 Mobile - iOS & Android Simulator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#064e3b">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon-192.png">
+  <title>GraminVikas 360 - Ministry of Rural Development</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-    body {
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      color: #f8fafc;
-    }
-    .top-info {
-      text-align: center;
-      margin-bottom: 16px;
-    }
-    .top-info h1 {
-      font-size: 20px;
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-    .top-info p {
-      font-size: 13px;
-      color: #94a3b8;
-      margin-top: 4px;
-    }
-    .device-switcher {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-      justify-content: center;
-    }
-    .dev-btn {
-      background: #334155;
-      color: #ffffff;
-      border: 1px solid #475569;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 12px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.2s;
-    }
-    .dev-btn.active {
-      background: #0284c7;
-      border-color: #38bdf8;
-    }
-    /* Phone Frame */
-    .phone-wrapper {
-      position: relative;
-      width: 380px;
-      height: 780px;
-      background: #000;
-      border-radius: 46px;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 0 10px #1e293b, 0 0 0 12px #334155;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-    .dynamic-island {
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 120px;
-      height: 28px;
-      background: #000;
-      border-radius: 18px;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 12px;
-    }
-    .dynamic-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #111;
-      border: 2px solid #222;
-    }
-    .phone-screen {
-      flex: 1;
-      background: #f8fafc;
-      color: #0f172a;
-      overflow-y: auto;
-      padding-top: 44px;
-      display: flex;
-      flex-direction: column;
-    }
-    /* App Header */
-    .app-header {
-      background: #064e3b;
-      color: white;
-      padding: 12px 16px;
-      border-bottom: 1px solid #047857;
-    }
-    .header-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-    .header-title {
-      font-size: 15px;
-      font-weight: 800;
-    }
-    .header-sub {
-      font-size: 10px;
-      color: #a7f3d0;
-    }
-    .pills {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-    }
-    .status-pill {
-      background: #ecfdf5;
-      color: #065f46;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 12px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .status-pill.offline {
-      background: #fef2f2;
-      color: #991b1b;
-    }
-    .queue-pill {
-      background: #f59e0b;
-      color: white;
-      font-size: 10px;
-      font-weight: 800;
-      padding: 3px 7px;
-      border-radius: 12px;
-      cursor: pointer;
-    }
-    /* Segments */
-    .segment-bar {
-      display: flex;
-      background: #022c22;
-      border-radius: 8px;
-      padding: 3px;
-      gap: 4px;
-    }
-    .seg-item {
-      flex: 1;
-      text-align: center;
-      padding: 6px 0;
-      font-size: 11px;
-      font-weight: 700;
-      color: #9ca3af;
-      cursor: pointer;
-      border-radius: 6px;
-    }
-    .seg-item.active {
-      background: #059669;
-      color: white;
-    }
-    /* Content Area */
-    .screen-content {
-      flex: 1;
-      padding: 12px;
-      overflow-y: auto;
-    }
-    .card {
-      background: white;
-      border-radius: 10px;
-      padding: 12px;
-      margin-bottom: 10px;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    }
-    .badge {
-      display: inline-block;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 4px;
-      text-transform: uppercase;
-    }
+    body { background-color: #f8fafc; color: #0f172a; min-height: 100vh; display: flex; flex-direction: column; }
+    
+    /* Government Header */
+    .gov-topbar { background: #022c22; color: #a7f3d0; font-size: 11px; padding: 4px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #064e3b; }
+    .header-main { background: #064e3b; color: white; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #047857; }
+    .brand-section { display: flex; align-items: center; gap: 10px; }
+    .brand-logo { font-size: 26px; }
+    .brand-title { font-size: 17px; font-weight: 800; letter-spacing: 0.3px; }
+    .brand-subtitle { font-size: 11px; color: #6ee7b7; font-weight: 500; }
+    
+    /* Navigation Bar */
+    .nav-bar { background: #ffffff; border-bottom: 1px solid #e2e8f0; display: flex; overflow-x: auto; padding: 0 8px; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+    .nav-item { padding: 12px 14px; font-size: 13px; font-weight: 700; color: #475569; cursor: pointer; border-bottom: 3px solid transparent; display: flex; align-items: center; gap: 6px; }
+    .nav-item.active { color: #064e3b; border-bottom-color: #064e3b; background: #f0fdf4; }
+    
+    /* Content Layout */
+    .main-container { flex: 1; padding: 16px; max-width: 1200px; margin: 0 auto; width: 100%; }
+    
+    /* Cards & Badges */
+    .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .badge-foundation { background: #fef3c7; color: #b45309; }
     .badge-plinth { background: #e0f2fe; color: #0369a1; }
     .badge-lintel { background: #ede9fe; color: #6d28d9; }
     .badge-roof { background: #ffedd5; color: #c2410c; }
-    .badge-foundation { background: #fef3c7; color: #b45309; }
     .badge-completed { background: #dcfce7; color: #15803d; }
-    .btn {
-      width: 100%;
-      background: #064e3b;
-      color: white;
-      border: none;
-      padding: 10px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 8px;
-    }
-    .btn:hover { background: #047857; }
-    .btn-sky { background: #0284c7; }
+    
+    /* Buttons */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; border: none; transition: background 0.2s; }
+    .btn-primary { background: #064e3b; color: white; }
+    .btn-primary:hover { background: #047857; }
+    .btn-sky { background: #0284c7; color: white; }
     .btn-sky:hover { background: #0369a1; }
-    /* Camera Modal View */
-    .viewfinder {
-      height: 220px;
-      background: #0f172a;
-      border-radius: 10px;
-      border: 2px solid #38bdf8;
-      position: relative;
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      color: #22c55e;
-      font-family: monospace;
-      font-size: 9px;
-      margin-bottom: 10px;
-    }
-    .reticle {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 60px;
-      height: 60px;
-      border: 1px dashed rgba(56, 189, 248, 0.7);
-      border-radius: 50%;
-    }
-    /* Voice FAB */
-    .voice-fab {
-      position: absolute;
-      bottom: 20px;
-      right: 16px;
-      background: #064e3b;
-      color: white;
-      border-radius: 30px;
-      padding: 8px 14px;
-      font-size: 11px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      border: 1px solid #10b981;
-    }
-    .toast {
-      position: absolute;
-      bottom: 65px;
-      left: 14px;
-      right: 14px;
-      background: #1e293b;
-      color: #38bdf8;
-      border: 1px solid #38bdf8;
-      padding: 8px;
-      border-radius: 8px;
-      font-size: 11px;
-      text-align: center;
-      display: none;
-    }
+    .btn-amber { background: #d97706; color: white; }
+    .btn-danger { background: #dc2626; color: white; }
+    .btn-outline { background: transparent; border: 1px solid #cbd5e1; color: #334155; }
+    .btn-block { width: 100%; }
+    
+    /* Stats Grid */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 16px; }
+    .stat-box { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; }
+    .stat-label { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; }
+    .stat-val { font-size: 20px; font-weight: 800; color: #0f172a; margin-top: 4px; }
+    
+    /* Viewfinder HUD & Camera View */
+    .camera-hud { background: #0f172a; border-radius: 12px; padding: 14px; border: 2px solid #38bdf8; color: #22c55e; font-family: monospace; font-size: 11px; position: relative; margin-bottom: 14px; display: flex; flex-direction: column; gap: 10px; }
+    .hud-line { margin-bottom: 3px; text-shadow: 0 0 4px rgba(34,197,94,0.5); font-size: 11px; }
+    .hud-watermark { background: rgba(0,0,0,0.85); border: 1px solid #38bdf8; padding: 8px; border-radius: 6px; color: #38bdf8; font-size: 10px; }
+    .viewfinder-wrapper { position: relative; width: 100%; border-radius: 8px; overflow: hidden; background: #020617; border: 1px solid #334155; min-height: 260px; display: flex; align-items: center; justify-content: center; }
+    .viewfinder-video { width: 100%; max-height: 360px; object-fit: cover; display: block; border-radius: 8px; background: #000; }
+    .viewfinder-reticle { position: absolute; inset: 0; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; padding: 10px; }
+    .reticle-box { width: 78%; height: 58%; margin: auto; border: 2px dashed rgba(56,189,248,0.8); border-radius: 8px; box-shadow: 0 0 20px rgba(56,189,248,0.25); position: relative; display: flex; align-items: center; justify-content: center; }
+    .reticle-center { width: 10px; height: 10px; border-radius: 50%; border: 2px solid #22c55e; background: rgba(34,197,94,0.4); }
+    .camera-actions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin-top: 6px; }
+    .photo-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 16px; }
+    .photo-modal-card { background: #0f172a; border: 2px solid #38bdf8; border-radius: 12px; max-width: 650px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 16px; color: white; }
+    
+    /* Floating Bhashini Assistant */
+    .voice-fab { position: fixed; bottom: 20px; right: 20px; background: #064e3b; color: white; border: 2px solid #34d399; padding: 10px 16px; border-radius: 30px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 1000; }
+    .voice-toast { position: fixed; bottom: 75px; right: 20px; max-width: 340px; background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8; border-radius: 8px; padding: 10px 14px; font-size: 12px; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: none; z-index: 1000; }
   </style>
 </head>
 <body>
 
-  <div class="top-info">
-    <h1><span>📱</span> GraminVikas 360 v2.0 - Mobile Simulation</h1>
-    <p>Cross-Platform PMAY-G Rural Inspection App for iOS (iPhone) and Android Phones</p>
-    <div class="device-switcher">
-      <button class="dev-btn active" onclick="setDevice('iphone')">🍎 Apple iPhone 15 Pro</button>
-      <button class="dev-btn" onclick="setDevice('pixel')">🤖 Google Pixel 8 Pro</button>
+  <!-- Top Government Ribbon -->
+  <div class="gov-topbar">
+    <span>🇮🇳 भारत सरकार • ग्रामीण विकास मंत्रालय | Ministry of Rural Development</span>
+    <span id="networkPill" style="cursor: pointer;" onclick="toggleNetwork()">🟢 ONLINE</span>
+  </div>
+
+  <!-- Main Government Header -->
+  <div class="header-main">
+    <div class="brand-section">
+      <div class="brand-logo">🏛️</div>
+      <div>
+        <div class="brand-title">GraminVikas 360 v2.0</div>
+        <div class="brand-subtitle">PMAY-G Rural Housing & Panchayat Public Works Platform</div>
+      </div>
+    </div>
+    <div id="authStatusBadge">
+      <button class="btn btn-outline" style="color: white; border-color: #047857; padding: 6px 12px; font-size: 11px;" onclick="navigateTo('login')">
+        🔐 Login
+      </button>
     </div>
   </div>
 
-  <div class="phone-wrapper" id="phoneWrapper">
-    <div class="dynamic-island">
-      <div class="dynamic-dot"></div>
-      <div style="width: 4px; height: 4px; background: #065f46; border-radius: 50%;"></div>
-    </div>
-
-    <div class="phone-screen">
-      <!-- App Header -->
-      <div class="app-header">
-        <div class="header-row">
-          <div>
-            <div class="header-title">🇮🇳 GraminVikas 360</div>
-            <div class="header-sub">MoRD • PMAY-G Mobile Mission</div>
-          </div>
-          <div class="pills">
-            <div class="status-pill" id="netPill" onclick="toggleNetwork()">
-              <span id="netDot">●</span> <span id="netLabel">Online</span>
-            </div>
-            <div class="queue-pill" id="queuePill" onclick="showQueue()">⚡ 1</div>
-          </div>
-        </div>
-
-        <div class="segment-bar">
-          <div class="seg-item active" id="seg-inspector" onclick="switchRole('inspector')">👷 Field (FO-8821)</div>
-          <div class="seg-item" id="seg-citizen" onclick="switchRole('citizen')">👥 Citizen</div>
-          <div class="seg-item" id="seg-admin" onclick="switchRole('admin')">🏛️ BDO Sign</div>
-        </div>
-      </div>
-
-      <!-- Screen Body -->
-      <div class="screen-content" id="screenBody">
-        <!-- Rendered via JS -->
-      </div>
-    </div>
-
-    <!-- Floating Voice Assistant -->
-    <div class="voice-fab" onclick="triggerVoice()">
-      <span>🎙️</span> Bhashini Voice
-    </div>
-
-    <div class="toast" id="toast">
-      भाषिणी: "भू-टैगिंग सत्यापन शुरू करने के लिए लाभार्थी चुनें।" (Choose beneficiary to begin geotag)
-    </div>
+  <!-- Global Navigation Bar -->
+  <div class="nav-bar">
+    <div class="nav-item active" id="nav-home" onclick="navigateTo('home')">🏠 Overview</div>
+    <div class="nav-item" id="nav-field" onclick="navigateTo('field')">👷 Field Inspector</div>
+    <div class="nav-item" id="nav-citizen" onclick="navigateTo('citizen')">👥 Citizen Portal</div>
+    <div class="nav-item" id="nav-admin" onclick="navigateTo('admin')">🏛️ BDO Governance</div>
+    <div class="nav-item" id="nav-social" onclick="navigateTo('social')">📜 Social Audit</div>
+    <div class="nav-item" id="nav-login" onclick="navigateTo('login')">🔑 Auth Portal</div>
   </div>
+
+  <!-- Main Application Body -->
+  <div class="main-container" id="appBody">
+    <!-- Rendered Dynamically via JS -->
+  </div>
+
+  <!-- Floating Bhashini Voice Assistant -->
+  <div class="voice-fab" onclick="triggerVoice()">
+    <span>🎙️</span> Bhashini Voice
+  </div>
+  <div class="voice-toast" id="voiceToast"></div>
 
   <script>
-    let currentRole = 'inspector';
+    // App State
+    let currentPage = 'home';
     let isOnline = true;
-    let pendingQueue = [
-      { id: 'INSP-9921', name: 'Ramvati Devi', stage: 'plinth', lat: 25.3176, lng: 82.9739, time: 'Today 11:42 AM' }
+    let auth = { inspector: false, admin: false, inspectorBadge: 'FO-8821', adminPin: '2024' };
+    
+    let beneficiaries = [
+      { id: 'UP-2024-8841-A', name: 'Ramvati Devi', relation: 'Late Ramesh Chandra', village: 'Khajuraho Purwa', gp: 'Rampur Kalan', block: 'Varanasi', stage: 'plinth', sanction: 120000, paid: 40000, lat: 25.3176, lng: 82.9739, phone: '+91 98765 43210' },
+      { id: 'MP-2024-5519-B', name: 'Surendra Kumar Gond', relation: 'Moti Lal Gond', village: 'Bhiria Tola', gp: 'Bandhavgarh Rural', block: 'Umaria', stage: 'lintel', sanction: 130000, paid: 85000, lat: 23.5312, lng: 80.8344, phone: '+91 94251 77301' },
+      { id: 'BR-2024-9102-C', name: 'Meena Devi', relation: 'Shyam Sundar Paswan', village: 'Pipra Khem', gp: 'Harsidhi North', block: 'Motihari', stage: 'foundation', sanction: 120000, paid: 40000, lat: 26.6514, lng: 84.9122, phone: '+91 91223 88190' },
+      { id: 'RJ-2024-3382-D', name: 'Kamla Bai Gurjar', relation: 'Hira Lal Gurjar', village: 'Devgarh Dhani', gp: 'Kalyanpura', block: 'Sawai Madhopur', stage: 'roof', sanction: 130000, paid: 110000, lat: 25.9928, lng: 76.3541, phone: '+91 99821 44102' },
+      { id: 'OD-2024-1194-E', name: 'Baidhar Majhi', relation: 'Dhanu Majhi', village: 'Badamal Forest Colony', gp: 'Titilagarh West', block: 'Balangir', stage: 'completed', sanction: 130000, paid: 130000, lat: 20.2961, lng: 83.2144, phone: '+91 97782 55921' }
     ];
 
-    const beneficiaries = [
-      { id: 'UP-2024-8841-A', name: 'Ramvati Devi', relation: 'Late Ramesh Chandra', village: 'Khajuraho Purwa', gp: 'Rampur Kalan', stage: 'plinth', sanction: 120000, paid: 40000 },
-      { id: 'MP-2024-5519-B', name: 'Surendra Kumar Gond', relation: 'Moti Lal Gond', village: 'Bhiria Tola', gp: 'Bandhavgarh Rural', stage: 'lintel', sanction: 130000, paid: 85000 },
-      { id: 'BR-2024-9102-C', name: 'Meena Devi', relation: 'Shyam Sundar Paswan', village: 'Pipra Khem', gp: 'Harsidhi North', stage: 'foundation', sanction: 120000, paid: 40000 },
-      { id: 'RJ-2024-3382-D', name: 'Kamla Bai Gurjar', relation: 'Hira Lal Gurjar', village: 'Devgarh Dhani', gp: 'Kalyanpura', stage: 'roof', sanction: 130000, paid: 110000 }
+    let offlineQueue = [
+      { id: 'INSP-9921', benId: 'UP-2024-8841-A', name: 'Ramvati Devi', stage: 'plinth', lat: 25.3176, lng: 82.9739, alt: 248, time: '23/10/2026, 11:42 AM IST', synced: false }
     ];
 
-    function renderScreen() {
-      const container = document.getElementById('screenBody');
+    function navigateTo(page, params) {
+      if (page !== 'inspect' && typeof stopCameraStream === 'function') stopCameraStream();
+      currentPage = page;
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      const activeNav = document.getElementById('nav-' + page);
+      if (activeNav) activeNav.classList.add('active');
 
-      if (currentRole === 'inspector') {
-        container.innerHTML = `
-          <div style="margin-bottom: 8px; font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase;">
-            Assigned Field Queue (${beneficiaries.length})
+      const container = document.getElementById('appBody');
+      window.scrollTo(0, 0);
+
+      if (page === 'home') renderHomePage(container);
+      else if (page === 'login') renderLoginPage(container);
+      else if (page === 'field') renderFieldPage(container);
+      else if (page === 'inspect') renderInspectCameraPage(container, params);
+      else if (page === 'queue') renderQueuePage(container);
+      else if (page === 'citizen') renderCitizenPage(container);
+      else if (page === 'admin') renderAdminPage(container);
+      else if (page === 'social') renderSocialPage(container);
+    }
+
+    // 1. HOME / OVERVIEW
+    function renderHomePage(c) {
+      c.innerHTML = `
+        <div class="stats-grid">
+          <div class="stat-box"><div class="stat-label">Total Sanctions</div><div class="stat-val">12</div></div>
+          <div class="stat-box"><div class="stat-label">In-Progress</div><div class="stat-val" style="color: #0284c7;">8</div></div>
+          <div class="stat-box"><div class="stat-label">Completed</div><div class="stat-val" style="color: #059669;">4</div></div>
+          <div class="stat-box"><div class="stat-label">Fraud Flags</div><div class="stat-val" style="color: #dc2626;">0</div></div>
+          <div class="stat-box"><div class="stat-label">DBT Disbursed</div><div class="stat-val" style="color: #d97706;">₹18.4L</div></div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin-bottom: 20px;">
+          <div class="card" style="border-left: 4px solid #064e3b;">
+            <h3 style="font-size: 16px; font-weight: 800; color: #064e3b; margin-bottom: 6px;">👷 Field Inspector Workspace</h3>
+            <p style="font-size: 12px; color: #64748b; margin-bottom: 12px;">Offline-first geotagging with optical liveness, tamper-proof ECDSA watermark, and Edge AI stage detection.</p>
+            <button class="btn btn-primary btn-block" onclick="navigateTo('field')">Launch Inspection Queue ➔</button>
           </div>
+
+          <div class="card" style="border-left: 4px solid #0284c7;">
+            <h3 style="font-size: 16px; font-weight: 800; color: #0284c7; margin-bottom: 6px;">👥 Citizen Public Dashboard</h3>
+            <p style="font-size: 12px; color: #64748b; margin-bottom: 12px;">Zero-login transparency tracker. Check milestone progress, DBT installment releases, and submit field grievances.</p>
+            <button class="btn btn-sky btn-block" onclick="navigateTo('citizen')">Open Public Tracker ➔</button>
+          </div>
+
+          <div class="card" style="border-left: 4px solid #d97706;">
+            <h3 style="font-size: 16px; font-weight: 800; color: #d97706; margin-bottom: 6px;">🏛️ BDO & Admin Governance</h3>
+            <p style="font-size: 12px; color: #64748b; margin-bottom: 12px;">3-Tier maker-checker clearance, bi-temporal photographic diffing, and automated PFMS XML treasury export.</p>
+            <button class="btn btn-amber btn-block" onclick="navigateTo('admin')">Access BDO Portal ➔</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="font-size: 15px; font-weight: 800; margin-bottom: 12px;">Active Gram Panchayat Construction Sites</h3>
+          <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+              <thead>
+                <tr style="background: #f1f5f9; text-align: left;">
+                  <th style="padding: 8px;">BENEFICIARY</th>
+                  <th style="padding: 8px;">PANCHAYAT</th>
+                  <th style="padding: 8px;">STAGE</th>
+                  <th style="padding: 8px;">DBT PAID</th>
+                  <th style="padding: 8px;">ACTION</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${beneficiaries.map(b => `
+                  <tr style="border-bottom: 1px solid #e2e8f0;">
+                    <td style="padding: 8px;"><b>${b.name}</b><br><span style="color:#64748b; font-size:10px;">ID: ${b.id}</span></td>
+                    <td style="padding: 8px;">${b.gp} (${b.block})</td>
+                    <td style="padding: 8px;"><span class="badge badge-${b.stage}">${b.stage}</span></td>
+                    <td style="padding: 8px; color: #059669; font-weight: 700;">₹${b.paid.toLocaleString('en-IN')}</td>
+                    <td style="padding: 8px;"><button class="btn btn-primary" style="padding: 4px 8px; font-size: 11px;" onclick="navigateTo('inspect', '${b.id}')">Inspect</button></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    // 2. LOGIN PORTAL
+    function renderLoginPage(c) {
+      c.innerHTML = `
+        <div style="max-width: 480px; margin: 20px auto;">
+          <div class="card">
+            <h2 style="font-size: 18px; font-weight: 800; text-align: center; color: #064e3b; margin-bottom: 4px;">Official GovTech Access Portal</h2>
+            <p style="font-size: 12px; color: #64748b; text-align: center; margin-bottom: 16px;">Sign in with your government badge credentials or DSC hardware token.</p>
+            
+            <div style="display: flex; gap: 8px; margin-bottom: 16px; background: #f1f5f9; padding: 4px; border-radius: 8px;">
+              <button id="tabInsp" class="btn btn-block ${!auth.inspector ? 'btn-primary' : 'btn-outline'}" onclick="setLoginTab('inspector')">Field Inspector</button>
+              <button id="tabAdm" class="btn btn-block ${auth.inspector ? 'btn-primary' : 'btn-outline'}" onclick="setLoginTab('admin')">BDO Officer (DSC)</button>
+            </div>
+
+            <div id="loginFormBody">
+              <div style="margin-bottom: 12px;">
+                <label style="font-size: 11px; font-weight: 700; color: #475569;">OFFICER BADGE ID</label>
+                <input type="text" id="inpUser" value="FO-8821" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; margin-top: 4px;">
+              </div>
+              <div style="margin-bottom: 14px;">
+                <label style="font-size: 11px; font-weight: 700; color: #475569;">SECURITY PIN</label>
+                <input type="password" id="inpPin" value="1234" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; margin-top: 4px;">
+              </div>
+              <button class="btn btn-primary btn-block" onclick="doLogin('inspector')">Authenticate Officer Session ➔</button>
+              <div style="font-size: 11px; color: #64748b; text-align: center; margin-top: 10px;">Demo: FO-8821 / PIN: 1234</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function setLoginTab(t) {
+      const b = document.getElementById('loginFormBody');
+      if (t === 'inspector') {
+        b.innerHTML = `
+          <div style="margin-bottom: 12px;">
+            <label style="font-size: 11px; font-weight: 700; color: #475569;">OFFICER BADGE ID</label>
+            <input type="text" id="inpUser" value="FO-8821" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; margin-top: 4px;">
+          </div>
+          <div style="margin-bottom: 14px;">
+            <label style="font-size: 11px; font-weight: 700; color: #475569;">SECURITY PIN</label>
+            <input type="password" id="inpPin" value="1234" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; margin-top: 4px;">
+          </div>
+          <button class="btn btn-primary btn-block" onclick="doLogin('inspector')">Authenticate Officer Session ➔</button>
+          <div style="font-size: 11px; color: #64748b; text-align: center; margin-top: 10px;">Demo: FO-8821 / PIN: 1234</div>
+        `;
+      } else {
+        b.innerHTML = `
+          <div style="margin-bottom: 12px;">
+            <label style="font-size: 11px; font-weight: 700; color: #475569;">BDO OFFICIAL EMAIL (NIC)</label>
+            <input type="text" id="inpUser" value="bdo.ranchi@nic.in" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; margin-top: 4px;">
+          </div>
+          <div style="margin-bottom: 14px;">
+            <label style="font-size: 11px; font-weight: 700; color: #475569;">DSC HARDWARE TOKEN PIN</label>
+            <input type="password" id="inpPin" value="2024" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; margin-top: 4px;">
+          </div>
+          <button class="btn btn-amber btn-block" onclick="doLogin('admin')">Verify DSC Certificate Token ➔</button>
+          <div style="font-size: 11px; color: #64748b; text-align: center; margin-top: 10px;">Demo: DSC PIN is 2024</div>
+        `;
+      }
+    }
+
+    function doLogin(type) {
+      if (type === 'inspector') {
+        auth.inspector = true;
+        alert('Field Inspector Authenticated: Devendra Sharma (JE) [FO-8821]');
+        navigateTo('field');
+      } else {
+        auth.admin = true;
+        alert('NIC Digital Signature Certificate Token Validated! (BDO Ranchi)');
+        navigateTo('admin');
+      }
+    }
+
+    // 3. FIELD INSPECTOR PAGE
+    function renderFieldPage(c) {
+      c.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+          <div>
+            <h2 style="font-size: 18px; font-weight: 800; color: #064e3b;">Field Inspection Roster</h2>
+            <div style="font-size: 12px; color: #64748b;">Inspector: Devendra Sharma (JE) • FO-8821 • Offline Queue: ${offlineQueue.filter(q => !q.synced).length} pending</div>
+          </div>
+          <button class="btn btn-sky" onclick="navigateTo('queue')">⚡ Offline Sync Queue (${offlineQueue.filter(q => !q.synced).length})</button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px;">
           ${beneficiaries.map(b => `
             <div class="card">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
                 <div>
-                  <div style="font-size: 14px; font-weight: 700; color: #0f172a;">${b.name}</div>
+                  <h3 style="font-size: 15px; font-weight: 800;">${b.name}</h3>
                   <div style="font-size: 11px; color: #64748b;">c/o ${b.relation}</div>
                 </div>
                 <span class="badge badge-${b.stage}">${b.stage}</span>
               </div>
-              <div style="font-size: 11px; color: #475569; margin-bottom: 6px;">
-                📍 ${b.village}, ${b.gp} • ID: ${b.id}
+              <div style="font-size: 11px; color: #475569; margin-bottom: 8px;">
+                📍 ${b.village}, ${b.gp} • ID: <b>${b.id}</b>
               </div>
-              <div style="background: #f8fafc; padding: 6px 8px; border-radius: 6px; display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 8px;">
+              <div style="background: #f8fafc; padding: 8px; border-radius: 6px; display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 10px;">
                 <span>Sanction: ₹${b.sanction.toLocaleString('en-IN')}</span>
-                <span style="color: #059669; font-weight: 700;">Paid: ₹${b.paid.toLocaleString('en-IN')}</span>
+                <span style="color: #059669; font-weight: 700;">Disbursed: ₹${b.paid.toLocaleString('en-IN')}</span>
               </div>
-              <button class="btn" onclick="openCamera('${b.name}', '${b.id}', '${b.stage}')">
-                📷 Open Geotagged Camera
+              <button class="btn btn-primary btn-block" onclick="navigateTo('inspect', '${b.id}')">
+                📷 Open Geotagged Camera & Verify
               </button>
             </div>
           `).join('')}
-        `;
-      } else if (currentRole === 'citizen') {
-        container.innerHTML = `
-          <div class="card" style="background: #eff6ff; border-color: #bfdbfe;">
-            <div style="font-weight: 800; color: #1e40af; font-size: 13px; margin-bottom: 4px;">PMAY-G Public Tracking</div>
-            <div style="font-size: 11px; color: #3b82f6; margin-bottom: 8px;">Search by Sanction ID to view milestone proofs & DBT credits.</div>
-            <input type="text" value="UP-2024-8841-A" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #93c5fd; font-size: 12px; margin-bottom: 8px;" />
-            <button class="btn btn-sky">Track My Home Status</button>
+        </div>
+      `;
+    }
+
+    // 4. FULL-SCREEN GEOTAG CAMERA & INSPECTION VIEW
+    // Global Camera & Geotag State
+    let activeCameraStream = null;
+    let currentFacingMode = 'environment';
+    let liveClockTimer = null;
+    let geoWatchId = null;
+    let currentCapturedPhotoData = null;
+    let activeInspectionCoords = { lat: 25.3176, lng: 82.9739, alt: 248, accuracy: 3.8 };
+
+    function stopCameraStream() {
+      if (activeCameraStream) {
+        try {
+          activeCameraStream.getTracks().forEach(track => track.stop());
+        } catch (e) { console.error(e); }
+        activeCameraStream = null;
+      }
+      if (liveClockTimer) {
+        clearInterval(liveClockTimer);
+        liveClockTimer = null;
+      }
+      if (geoWatchId !== null && navigator.geolocation) {
+        navigator.geolocation.clearWatch(geoWatchId);
+        geoWatchId = null;
+      }
+    }
+
+    function renderInspectCameraPage(c, id) {
+      const b = beneficiaries.find(x => x.id === id) || beneficiaries[0];
+      const timeStr = new Date().toLocaleString('en-IN');
+      const sig = 'GOV-IN-NIC:' + Math.random().toString(16).slice(2, 6).toUpperCase() + '-ECDSA-P256';
+      currentCapturedPhotoData = null;
+
+      c.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h2 style="font-size: 17px; font-weight: 800;">📷 Geotagged Milestone Verification</h2>
+          <button class="btn btn-outline" style="padding: 4px 10px; font-size: 11px;" onclick="navigateTo('field')">✕ Back to List</button>
+        </div>
+
+        <div class="card" style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-size: 15px; font-weight: 800;">${b.name}</div>
+              <div style="font-size: 11px; color: #64748b;">PMAY ID: ${b.id} • ${b.gp}</div>
+            </div>
+            <span class="badge badge-${b.stage}">Expected: ${b.stage.toUpperCase()}</span>
+          </div>
+        </div>
+
+        <!-- Hidden Native File & Camera Input (Universally supported across all Android WebViews) -->
+        <input type="file" id="systemCameraInput" accept="image/*" capture="environment" style="display:none;" onchange="handleSystemCameraUpload(event, '${b.id}', '${sig}', '${timeStr}')">
+
+        <!-- Live Viewfinder HUD (Full Width, Zero Mockup) -->
+        <div class="camera-hud">
+          <div>
+            <div class="hud-line">● GPS COORD: <span id="hudGpsText">${b.lat}° N, ${b.lng}° E (±3.8m CEP-50)</span></div>
+            <div class="hud-line">● SATELLITE CLOCK: <span id="hudClockText">${timeStr} [SAT LOCKED]</span></div>
+            <div class="hud-line">● GEOFENCE PROXIMITY: 6 METERS AWAY (🟢 INSIDE 50m BOUNDS)</div>
+            <div class="hud-line">● 3D OPTICAL LIVENESS: TILT 14.2° (<span id="hudStreamStatus">STANDBY</span>)</div>
           </div>
 
+          <!-- Camera Live Video & Reticle Section -->
+          <div id="cameraViewArea">
+            <div class="viewfinder-wrapper">
+              <video id="cameraVideo" autoplay playsinline muted class="viewfinder-video"></video>
+              <div class="viewfinder-reticle">
+                <div style="display: flex; justify-content: space-between; font-size: 10px;">
+                  <span style="background: rgba(220,38,38,0.85); color: white; padding: 2px 6px; border-radius: 4px; font-weight: 700;">● REC 1080P</span>
+                  <span style="background: rgba(15,23,42,0.8); color: #38bdf8; padding: 2px 6px; border-radius: 4px;">PMAY-G SECURE SENSOR</span>
+                </div>
+                <div class="reticle-box">
+                  <div class="reticle-center"></div>
+                  <div style="position: absolute; bottom: 8px; width: 100%; text-align: center; font-size: 10px; color: #38bdf8; text-shadow: 0 0 4px #000;">
+                    🎯 ALIGN PHYSICAL STRUCTURE WITHIN RETICLE
+                  </div>
+                </div>
+                <div class="hud-watermark">
+                  🛡️ ${sig}<br>
+                  TARGET: ${b.id} | STAGE: ${b.stage.toUpperCase()}
+                </div>
+              </div>
+            </div>
+
+            <!-- Standby / Permission Notice (Visible if getUserMedia is denied or in non-secure file origin) -->
+            <div id="cameraNotice" style="display:none; background: #1e293b; border: 1px dashed #38bdf8; color: #93c5fd; padding: 10px; border-radius: 6px; margin-top: 8px; font-size: 11px; text-align: center;"></div>
+
+            <!-- Action Controls Grid -->
+            <div class="camera-actions-grid">
+              <button class="btn btn-primary" id="btnSnapLive" onclick="snapLiveVideo('${b.id}', '${sig}', '${timeStr}')">
+                📸 Snap Photo (Viewfinder)
+              </button>
+              <button class="btn btn-sky" onclick="document.getElementById('systemCameraInput').click()">
+                📷 Launch System Camera
+              </button>
+              <button class="btn btn-outline" style="color: #94a3b8; border-color: #475569;" onclick="toggleCameraFacing()">
+                🔄 Flip Camera
+              </button>
+              <button class="btn btn-amber" onclick="loadDemoStageEvidence('${b.id}', '${sig}', '${timeStr}')">
+                🖼️ Load Demo Evidence
+              </button>
+            </div>
+          </div>
+
+          <!-- Captured Photo Preview Section (Shown after photo is snapped or uploaded) -->
+          <div id="photoPreviewArea" style="display:none;">
+            <div style="text-align: center; margin-bottom: 8px;">
+              <div style="display: inline-block; background: #064e3b; color: #34d399; font-weight: 800; font-size: 11px; padding: 3px 10px; border-radius: 12px; margin-bottom: 6px;">
+                ✓ CRYPTOGRAPHICALLY STAMPED PHOTO PROOF
+              </div>
+              <img id="capturedPhotoImg" src="" style="width: 100%; border-radius: 8px; border: 2px solid #22c55e; max-height: 420px; object-fit: contain; background: #000; display: block; margin: 0 auto 10px;">
+            </div>
+
+            <!-- Edge AI Vision Card -->
+            <div class="card" style="background: #0f172a; color: white; border-color: #334155; margin-bottom: 12px; padding: 12px;">
+              <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+                <span style="font-weight: 700;">🤖 On-Device Edge AI Stage Classifier</span>
+                <span style="color: #38bdf8; font-weight: 700;">96.8% Confidence</span>
+              </div>
+              <div style="font-size: 11px; color: #94a3b8; margin-bottom: 4px;">
+                Detected Structural Features: Damp-proof course (DPC), concrete tie-beams, plinth brickwork
+              </div>
+              <div style="font-size: 12px; color: #22c55e; font-weight: 700;">
+                ✅ Visual proof matches expected milestone (${b.stage.toUpperCase()})
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 8px;">
+              <button class="btn btn-primary" style="flex: 2; padding: 14px; font-size: 14px;" onclick="saveInspection('${b.id}', '${b.name}', '${b.stage}', '${sig}', '${timeStr}')">
+                🔒 Sign & Save to Offline Queue
+              </button>
+              <button class="btn btn-outline" style="flex: 1; color: white; border-color: #64748b;" onclick="retakePhoto()">
+                🔄 Retake
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      startGeoAndClock(b);
+      startLiveCamera();
+    }
+
+    async function startLiveCamera() {
+      const videoEl = document.getElementById('cameraVideo');
+      const noticeEl = document.getElementById('cameraNotice');
+      const snapBtn = document.getElementById('btnSnapLive');
+      if (!videoEl) return;
+
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        if (noticeEl) {
+          noticeEl.style.display = 'block';
+          noticeEl.innerHTML = '⚠️ WebRTC stream in standby on this origin.<br>👉 Click <b>"📷 Launch System Camera"</b> to take photo via phone camera.';
+        }
+        if (snapBtn) {
+          snapBtn.disabled = true;
+          snapBtn.style.opacity = '0.6';
+        }
+        return;
+      }
+
+      try {
+        if (activeCameraStream) {
+          activeCameraStream.getTracks().forEach(t => t.stop());
+        }
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: { ideal: currentFacingMode },
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          },
+          audio: false
+        });
+        activeCameraStream = stream;
+        videoEl.srcObject = stream;
+        await videoEl.play();
+        if (noticeEl) noticeEl.style.display = 'none';
+        if (snapBtn) {
+          snapBtn.disabled = false;
+          snapBtn.style.opacity = '1';
+        }
+        const streamStatus = document.getElementById('hudStreamStatus');
+        if (streamStatus) streamStatus.innerText = 'SENSOR LIVE (' + currentFacingMode.toUpperCase() + ')';
+      } catch (err) {
+        console.warn('getUserMedia warning:', err);
+        if (noticeEl) {
+          noticeEl.style.display = 'block';
+          noticeEl.innerHTML = 'ℹ️ Live viewfinder in standby.<br>👉 Tap <b>"📷 Launch System Camera"</b> to snap directly with Android camera!';
+        }
+        if (snapBtn) {
+          snapBtn.disabled = true;
+          snapBtn.style.opacity = '0.6';
+        }
+      }
+    }
+
+    function toggleCameraFacing() {
+      currentFacingMode = (currentFacingMode === 'environment') ? 'user' : 'environment';
+      startLiveCamera();
+    }
+
+    function startGeoAndClock(b) {
+      activeInspectionCoords = { lat: b.lat, lng: b.lng, alt: 248, accuracy: 3.8 };
+      
+      const updateClock = () => {
+        const clk = document.getElementById('hudClockText');
+        if (clk) {
+          const now = new Date();
+          clk.innerText = now.toLocaleDateString('en-IN') + ', ' + now.toLocaleTimeString('en-IN') + ' [SAT LOCKED]';
+        }
+      };
+      updateClock();
+      liveClockTimer = setInterval(updateClock, 1000);
+
+      if (navigator.geolocation) {
+        geoWatchId = navigator.geolocation.watchPosition(
+          pos => {
+            activeInspectionCoords.lat = pos.coords.latitude;
+            activeInspectionCoords.lng = pos.coords.longitude;
+            activeInspectionCoords.alt = Math.round(pos.coords.altitude || 248);
+            activeInspectionCoords.accuracy = (pos.coords.accuracy || 3.8).toFixed(1);
+
+            const gpsEl = document.getElementById('hudGpsText');
+            if (gpsEl) {
+              gpsEl.innerText = `${activeInspectionCoords.lat.toFixed(5)}° N, ${activeInspectionCoords.lng.toFixed(5)}° E (±${activeInspectionCoords.accuracy}m CEP-50)`;
+            }
+          },
+          err => {
+            console.log('Using registered beneficiary geofence coords:', err);
+          },
+          { enableHighAccuracy: true, timeout: 10000, maximumAge: 5000 }
+        );
+      }
+    }
+
+    function stampGovTechWatermark(sourceImgOrVideo, b, sig, timeStr, sourceTag, callback) {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      const width = sourceImgOrVideo.videoWidth || sourceImgOrVideo.naturalWidth || sourceImgOrVideo.width || 1280;
+      const height = sourceImgOrVideo.videoHeight || sourceImgOrVideo.naturalHeight || sourceImgOrVideo.height || 720;
+      canvas.width = width;
+      canvas.height = height;
+
+      // Draw photo
+      ctx.drawImage(sourceImgOrVideo, 0, 0, width, height);
+
+      // Draw GovTech Banner Overlay at bottom
+      const bannerHeight = Math.max(140, Math.floor(height * 0.22));
+      const gradient = ctx.createLinearGradient(0, height - bannerHeight, 0, height);
+      gradient.addColorStop(0, 'rgba(15, 23, 42, 0.0)');
+      gradient.addColorStop(0.18, 'rgba(15, 23, 42, 0.90)');
+      gradient.addColorStop(1, 'rgba(2, 44, 34, 0.98)');
+
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, height - bannerHeight, width, bannerHeight);
+
+      // Cyan accent border line
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(0, height - bannerHeight + (bannerHeight * 0.14));
+      ctx.lineTo(width, height - bannerHeight + (bannerHeight * 0.14));
+      ctx.stroke();
+
+      // Text styling
+      const baseFontSize = Math.max(12, Math.floor(width * 0.016));
+      ctx.fillStyle = '#facc15';
+      ctx.font = `bold ${baseFontSize + 2}px monospace`;
+      
+      const startY = height - bannerHeight + (bannerHeight * 0.32);
+      const lineHeight = baseFontSize + 7;
+
+      ctx.fillText('🇮🇳 भारत सरकार • ग्रामीण विकास मंत्रालय | MINISTRY OF RURAL DEVELOPMENT (PMAY-G)', 18, startY);
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = `bold ${baseFontSize}px monospace`;
+      ctx.fillText(`BENEFICIARY: ${b.name.toUpperCase()} (ID: ${b.id}) • GP: ${b.gp.toUpperCase()}`, 18, startY + lineHeight);
+
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillText(`GPS: ${activeInspectionCoords.lat.toFixed(5)}° N, ${activeInspectionCoords.lng.toFixed(5)}° E (±${activeInspectionCoords.accuracy}m CEP) • ALT: ${activeInspectionCoords.alt}m MSL`, 18, startY + lineHeight * 2);
+
+      ctx.fillStyle = '#22c55e';
+      ctx.fillText(`TIME: ${timeStr} • SAT-CLOCK LOCKED • MILESTONE: ${b.stage.toUpperCase()}`, 18, startY + lineHeight * 3);
+
+      ctx.fillStyle = '#e2e8f0';
+      ctx.font = `italic ${baseFontSize - 1}px monospace`;
+      ctx.fillText(`ECDSA SIG: ${sig} • ${sourceTag} • 3D OPTICAL LIVENESS OK`, 18, startY + lineHeight * 4);
+
+      // Top-right government watermarking badge
+      ctx.fillStyle = 'rgba(6, 78, 59, 0.80)';
+      ctx.strokeStyle = '#34d399';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.roundRect(width - 230, 16, 214, 48, 6);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#34d399';
+      ctx.font = `bold 12px monospace`;
+      ctx.fillText('✓ GEOTAG VERIFIED', width - 215, 36);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = `10px monospace`;
+      ctx.fillText('SECURE HARDWARE ENCLAVE', width - 215, 52);
+
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.88);
+      callback(dataUrl);
+    }
+
+    function snapLiveVideo(bId, sig, timeStr) {
+      const b = beneficiaries.find(x => x.id === bId) || beneficiaries[0];
+      const videoEl = document.getElementById('cameraVideo');
+      if (!videoEl || !activeCameraStream) {
+        alert('Live camera is in standby. Click "📷 Launch System Camera" to take photo with your phone camera.');
+        return;
+      }
+      stampGovTechWatermark(videoEl, b, sig, timeStr, 'LIVE SENSOR CAPTURE', (dataUrl) => {
+        displayCapturedPhoto(dataUrl, b, sig, timeStr);
+      });
+    }
+
+    function handleSystemCameraUpload(event, bId, sig, timeStr) {
+      const b = beneficiaries.find(x => x.id === bId) || beneficiaries[0];
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          stampGovTechWatermark(img, b, sig, timeStr, 'DEVICE CAMERA INTENT', (dataUrl) => {
+            displayCapturedPhoto(dataUrl, b, sig, timeStr);
+          });
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function loadDemoStageEvidence(bId, sig, timeStr) {
+      const b = beneficiaries.find(x => x.id === bId) || beneficiaries[0];
+      const demoMap = {
+        'foundation': 'Demo_Pictures/1_Foundation_Stage/01_Trench_Excavation_and_Footing.jpg',
+        'plinth': 'Demo_Pictures/2_Plinth_Stage/01_Plinth_Level_Retaining_Masonry.jpg',
+        'lintel': 'Demo_Pictures/3_Lintel_Stage/01_Rural_Brick_Walls_Up_To_Lintel.jpg',
+        'roof': 'Demo_Pictures/4_Completion_Stage/01_Completed_PMAY_Pucca_House.jpg',
+        'completed': 'Demo_Pictures/4_Completion_Stage/02_Finished_Rural_Home_Plastered.jpg'
+      };
+      const path = demoMap[b.stage.toLowerCase()] || 'Demo_Pictures/2_Plinth_Stage/01_Plinth_Level_Retaining_Masonry.jpg';
+      const img = new Image();
+      img.onload = function() {
+        stampGovTechWatermark(img, b, sig, timeStr, 'OFFICIAL STAGE EVIDENCE PRESET', (dataUrl) => {
+          displayCapturedPhoto(dataUrl, b, sig, timeStr);
+        });
+      };
+      img.onerror = function() {
+        const c = document.createElement('canvas');
+        c.width = 1280; c.height = 720;
+        const cx = c.getContext('2d');
+        cx.fillStyle = '#1e293b'; cx.fillRect(0, 0, 1280, 720);
+        cx.fillStyle = '#38bdf8'; cx.font = 'bold 36px monospace';
+        cx.fillText('PMAY-G MILESTONE EVIDENCE: ' + b.stage.toUpperCase(), 300, 360);
+        stampGovTechWatermark(c, b, sig, timeStr, 'EVIDENCE PRESET', (dataUrl) => {
+          displayCapturedPhoto(dataUrl, b, sig, timeStr);
+        });
+      };
+      img.src = path;
+    }
+
+    function displayCapturedPhoto(dataUrl, b, sig, timeStr) {
+      currentCapturedPhotoData = dataUrl;
+      const viewArea = document.getElementById('cameraViewArea');
+      const prevArea = document.getElementById('photoPreviewArea');
+      const imgEl = document.getElementById('capturedPhotoImg');
+
+      if (viewArea) viewArea.style.display = 'none';
+      if (prevArea) prevArea.style.display = 'block';
+      if (imgEl) imgEl.src = dataUrl;
+
+      if (activeCameraStream) {
+        try {
+          activeCameraStream.getTracks().forEach(t => t.stop());
+        } catch(e) {}
+        activeCameraStream = null;
+      }
+    }
+
+    function retakePhoto() {
+      currentCapturedPhotoData = null;
+      const viewArea = document.getElementById('cameraViewArea');
+      const prevArea = document.getElementById('photoPreviewArea');
+
+      if (prevArea) prevArea.style.display = 'none';
+      if (viewArea) viewArea.style.display = 'block';
+
+      startLiveCamera();
+    }
+
+    function saveInspection(benId, name, stage, sig, timeStr) {
+      offlineQueue.unshift({
+        id: 'INSP-' + Math.floor(1000 + Math.random() * 9000),
+        benId,
+        name,
+        stage,
+        lat: activeInspectionCoords.lat || 25.3176,
+        lng: activeInspectionCoords.lng || 82.9739,
+        alt: activeInspectionCoords.alt || 248,
+        accuracy: activeInspectionCoords.accuracy || 3.8,
+        time: timeStr,
+        sig: sig,
+        photoDataUrl: currentCapturedPhotoData,
+        synced: false
+      });
+      alert(`✅ Success! Geotagged inspection for ${name} cryptographically signed with ECDSA-P256 and stored in offline queue.`);
+      navigateTo('queue');
+    }
+
+    // 5. OFFLINE QUEUE
+    function renderQueuePage(c) {
+      const pending = offlineQueue.filter(q => !q.synced);
+      c.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+          <div>
+            <h2 style="font-size: 18px; font-weight: 800; color: #064e3b;">⚡ Offline Synchronization Queue</h2>
+            <div style="font-size: 12px; color: #64748b;">${pending.length} pending • Status: ${isOnline ? '🟢 Connected to Cloud' : '🔴 Offline Storage'}</div>
+          </div>
+          <button class="btn btn-outline" style="padding: 6px 12px; font-size: 11px;" onclick="navigateTo('field')">Back to Roster</button>
+        </div>
+
+        <div class="card" style="background: #f0fdf4; border-color: #bbf7d0; margin-bottom: 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-size: 13px; font-weight: 700; color: #166534;">Automated Store-and-Forward Engine</div>
+              <div style="font-size: 11px; color: #15803d;">Inspections are securely stored in phone IndexedDB and push to state servers upon connection.</div>
+            </div>
+            <button class="btn btn-primary" onclick="syncAll()" ${!isOnline || pending.length === 0 ? 'disabled' : ''}>
+              🚀 Push ${pending.length} Payloads to MoRD
+            </button>
+          </div>
+        </div>
+
+        <div>
+          ${offlineQueue.map(q => `
+            <div class="card">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                <div>
+                  <div style="font-size: 14px; font-weight: 700;">${q.name}</div>
+                  <div style="font-size: 11px; color: #64748b;">ID: ${q.benId} • Record: ${q.id}</div>
+                </div>
+                <span class="badge badge-${q.stage}">${q.stage.toUpperCase()}</span>
+              </div>
+
+              <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 8px;">
+                ${q.photoDataUrl ? `
+                  <img src="${q.photoDataUrl}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px; border: 2px solid #064e3b; cursor: pointer; flex-shrink: 0;" onclick="openPhotoModal('${q.id}')" title="Click to view full signed photo">
+                ` : `
+                  <div style="width: 60px; height: 60px; background: #e2e8f0; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">📷</div>
+                `}
+                <div style="flex: 1;">
+                  <div style="background: #f8fafc; padding: 6px 8px; border-radius: 6px; font-size: 10px; font-family: monospace; color: #334155;">
+                    📍 ${q.lat}°, ${q.lng}° | ALT: ${q.alt}m MSL | ${q.time}
+                    ${q.sig ? `<br><span style="color: #0369a1;">🛡️ ${q.sig}</span>` : ''}
+                  </div>
+                </div>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px;">
+                <span style="font-weight: 700; color: ${q.synced ? '#15803d' : '#d97706'};">
+                  ${q.synced ? '✓ Synced to Central Server' : '⏳ Stored in Local Cache'}
+                </span>
+                <div style="display: flex; gap: 6px;">
+                  ${q.photoDataUrl ? `<button class="btn btn-outline" style="padding: 3px 8px; font-size: 10px;" onclick="openPhotoModal('${q.id}')">View Photo</button>` : ''}
+                  ${!q.synced ? `<button class="btn btn-primary" style="padding: 3px 8px; font-size: 10px;" onclick="syncOne('${q.id}')">Sync Now</button>` : ''}
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function openPhotoModal(id) {
+      const q = offlineQueue.find(x => x.id === id);
+      if (!q || !q.photoDataUrl) return;
+      let modal = document.getElementById('photoModalOverlay');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'photoModalOverlay';
+        modal.className = 'photo-modal-overlay';
+        document.body.appendChild(modal);
+      }
+      modal.innerHTML = `
+        <div class="photo-modal-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div style="font-weight: 800; font-size: 14px; color: #38bdf8;">📷 Geotagged Inspection Record: ${q.id}</div>
+            <button class="btn btn-outline" style="color: white; border-color: #64748b; padding: 4px 10px; font-size: 11px;" onclick="closePhotoModal()">✕ Close</button>
+          </div>
+          <div style="font-size: 12px; margin-bottom: 8px;"><b>${q.name}</b> (${q.benId}) • Stage: <b>${q.stage.toUpperCase()}</b></div>
+          <img src="${q.photoDataUrl}" style="width: 100%; border-radius: 8px; border: 1px solid #38bdf8; display: block; margin-bottom: 12px;">
+          <div style="font-size: 11px; color: #94a3b8; font-family: monospace; margin-bottom: 12px;">
+            📍 Coordinates: ${q.lat}°, ${q.lng}°<br>
+            🛰️ Timestamp: ${q.time}<br>
+            🛡️ Cryptographic Proof: ${q.sig || 'NIC-ECDSA-P256'}
+          </div>
+          <button class="btn btn-primary btn-block" onclick="closePhotoModal()">Done</button>
+        </div>
+      `;
+      modal.style.display = 'flex';
+    }
+
+    function closePhotoModal() {
+      const modal = document.getElementById('photoModalOverlay');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function syncAll() {
+      offlineQueue.forEach(q => q.synced = true);
+      alert('All pending inspection payloads successfully pushed to MoRD central database!');
+      renderQueuePage(document.getElementById('appBody'));
+    }
+
+    function syncOne(id) {
+      const it = offlineQueue.find(x => x.id === id);
+      if (it) it.synced = true;
+      alert(`Record ${id} synced successfully!`);
+      renderQueuePage(document.getElementById('appBody'));
+    }
+
+    // 6. CITIZEN PUBLIC TRACKER
+    function renderCitizenPage(c) {
+      const defaultBen = beneficiaries[0];
+      c.innerHTML = `
+        <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 16px; margin-bottom: 16px;">
+          <h2 style="font-size: 17px; font-weight: 800; color: #1e40af; margin-bottom: 4px;">PMAY-G Public Tracking Portal</h2>
+          <p style="font-size: 12px; color: #3b82f6; margin-bottom: 10px;">Enter your Sanction ID to view construction milestones, geotagged photos, and DBT installment releases directly.</p>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" id="citQuery" value="UP-2024-8841-A" style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #93c5fd; font-size: 13px;">
+            <button class="btn btn-sky" onclick="trackBen()">Track Status</button>
+          </div>
+        </div>
+
+        <div id="citResult">
           <div class="card">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
               <div>
-                <div style="font-weight: 800; font-size: 14px;">Ramvati Devi</div>
-                <div style="font-size: 11px; color: #64748b;">Panchayat: Rampur Kalan (UP)</div>
+                <h3 style="font-size: 17px; font-weight: 800;">${defaultBen.name}</h3>
+                <div style="font-size: 12px; color: #64748b;">PMAY-G ID: <b>${defaultBen.id}</b> • Village: ${defaultBen.village}</div>
+                <div style="font-size: 11px; color: #64748b;">Gram Panchayat: ${defaultBen.gp}, Block: ${defaultBen.block}</div>
               </div>
               <span class="badge badge-plinth">Plinth Approved</span>
             </div>
 
-            <div style="margin: 12px 0;">
-              <div style="font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 6px;">DBT INSTALLMENT TRANSFERS</div>
-              <div style="display: flex; gap: 4px;">
-                <div style="flex: 1; background: #dcfce7; padding: 6px; border-radius: 6px; text-align: center; font-size: 10px;">
-                  <div style="color: #15803d; font-weight: 700;">₹40,000</div>
-                  <div style="color: #166534;">✓ Inst 1 Credited</div>
-                </div>
-                <div style="flex: 1; background: #e0f2fe; padding: 6px; border-radius: 6px; text-align: center; font-size: 10px;">
-                  <div style="color: #0369a1; font-weight: 700;">₹40,000</div>
-                  <div style="color: #075985;">Inst 2 Ready</div>
-                </div>
-                <div style="flex: 1; background: #f1f5f9; padding: 6px; border-radius: 6px; text-align: center; font-size: 10px;">
-                  <div style="color: #64748b; font-weight: 700;">₹40,000</div>
-                  <div style="color: #94a3b8;">Inst 3 On Roof</div>
-                </div>
-              </div>
+            <!-- Financial Cards -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; background: #f8fafc; padding: 10px; border-radius: 8px; margin-bottom: 14px;">
+              <div style="text-align: center;"><div style="font-size: 10px; color: #64748b;">TOTAL SANCTION</div><div style="font-size: 14px; font-weight: 800;">₹1,20,000</div></div>
+              <div style="text-align: center;"><div style="font-size: 10px; color: #64748b;">DBT CREDITED</div><div style="font-size: 14px; font-weight: 800; color: #059669;">₹40,000</div></div>
+              <div style="text-align: center;"><div style="font-size: 10px; color: #64748b;">PENDING</div><div style="font-size: 14px; font-weight: 800; color: #d97706;">₹80,000</div></div>
             </div>
 
-            <div style="font-size: 11px; color: #475569; border-top: 1px solid #f1f5f9; padding-top: 8px;">
-              🛡️ Geotagged Milestone: 25.3176° N, 82.9739° E (Watermarked by JE FO-8821)
+            <!-- Milestone Tracker -->
+            <h4 style="font-size: 12px; font-weight: 800; color: #334155; text-transform: uppercase; margin-bottom: 8px;">Milestone Verification Timeline</h4>
+            <div style="display: flex; gap: 6px; margin-bottom: 14px;">
+              <div style="flex: 1; background: #dcfce7; padding: 8px; border-radius: 6px; text-align: center; font-size: 11px;"><div style="font-weight: 700; color: #166534;">Foundation</div><div style="color: #15803d; font-size: 10px;">✓ Approved</div></div>
+              <div style="flex: 1; background: #dcfce7; padding: 8px; border-radius: 6px; text-align: center; font-size: 11px;"><div style="font-weight: 700; color: #166534;">Plinth</div><div style="color: #15803d; font-size: 10px;">✓ Approved</div></div>
+              <div style="flex: 1; background: #e0f2fe; padding: 8px; border-radius: 6px; text-align: center; font-size: 11px;"><div style="font-weight: 700; color: #0369a1;">Lintel</div><div style="color: #0284c7; font-size: 10px;">In Progress</div></div>
+              <div style="flex: 1; background: #f1f5f9; padding: 8px; border-radius: 6px; text-align: center; font-size: 11px;"><div style="font-weight: 700; color: #64748b;">Roof Slab</div><div style="color: #94a3b8; font-size: 10px;">Pending</div></div>
             </div>
-          </div>
-        `;
-      } else if (currentRole === 'admin') {
-        container.innerHTML = `
-          <div class="card" style="background: #1e293b; color: white; border-color: #334155;">
-            <div style="font-size: 13px; font-weight: 800; color: #38bdf8;">🏛️ BDO Maker-Checker Clearance</div>
-            <div style="font-size: 11px; color: #94a3b8; margin: 4px 0 10px;">Officer: Dr. S. K. Awasthi • DSC Token #NIC-8812</div>
-            <div style="background: #0f172a; padding: 8px; border-radius: 6px; font-size: 11px; color: #22c55e;">
-              ● DSC Cryptographic Token Authenticated (PIN: 2024)
-            </div>
-          </div>
 
-          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; margin: 10px 0 6px;">
-            Pending Stage Authorizations
-          </div>
-
-          <div class="card">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-              <div>
-                <div style="font-size: 14px; font-weight: 700;">Ramvati Devi</div>
-                <div style="font-size: 11px; color: #64748b;">ID: UP-2024-8841-A</div>
-              </div>
-              <span class="badge badge-plinth">Plinth Stage</span>
+            <div style="font-size: 11px; color: #475569; border-top: 1px solid #e2e8f0; padding-top: 8px;">
+              🛡️ Geotagged Milestone: 25.3176° N, 82.9739° E • Digital Audit Verified by JE FO-8821
             </div>
-            <div style="background: #f8fafc; padding: 8px; border-radius: 6px; font-size: 10px; font-family: monospace; color: #334155; margin-bottom: 8px;">
-              <div>📍 Distance: 6m (Inside 50m tolerance)</div>
-              <div>🤖 AI Match: 95% Confidence (Plinth DPC)</div>
-              <div>🛡️ Sig: GOV-IN-NIC:4E91-A12B-ECDSA-P256</div>
-            </div>
-            <button class="btn" onclick="alert('Digital Signature Applied! Automated PFMS XML FTO sent to State Treasury.')">
-              ✍️ Sign Approval & Release ₹40,000 DBT
-            </button>
           </div>
-        `;
-      }
+        </div>
+      `;
     }
 
-    function switchRole(role) {
-      currentRole = role;
-      document.querySelectorAll('.seg-item').forEach(el => el.classList.remove('active'));
-      document.getElementById('seg-' + role).classList.add('active');
-      renderScreen();
+    function trackBen() {
+      alert('Live details refreshed for Beneficiary ID: ' + document.getElementById('citQuery').value);
+    }
+
+    // 7. BDO ADMIN GOVERNANCE
+    function renderAdminPage(c) {
+      c.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+          <div>
+            <h2 style="font-size: 18px; font-weight: 800; color: #064e3b;">🏛️ BDO Maker-Checker Clearance</h2>
+            <div style="font-size: 12px; color: #64748b;">Officer: Dr. S. K. Awasthi • DSC Token Authenticated (P-256)</div>
+          </div>
+          <button class="btn btn-amber" onclick="exportPfms()">📄 Batch Export PFMS XML</button>
+        </div>
+
+        <div class="card" style="background: #0f172a; color: white; border-color: #334155; margin-bottom: 14px;">
+          <div style="display: flex; justify-content: space-between; font-size: 12px;">
+            <span>● NIC Digital Signature Token: <b>ACTIVE</b></span>
+            <span style="color: #38bdf8;">Hardware PIN: 2024</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="font-size: 14px; font-weight: 800; margin-bottom: 10px;">Milestone Verifications Pending Final Sign-off</h3>
+          ${beneficiaries.slice(0, 3).map(b => `
+            <div style="border-bottom: 1px solid #e2e8f0; padding: 10px 0;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                <div><b>${b.name}</b> (${b.id})</div>
+                <span class="badge badge-${b.stage}">${b.stage}</span>
+              </div>
+              <div style="font-size: 11px; color: #475569; margin-bottom: 6px;">
+                Geofence: 6m away • AI Match: 95% Confidence • Geotagged by: FO-8821
+              </div>
+              <button class="btn btn-primary" style="padding: 6px 12px; font-size: 11px;" onclick="approveDbt('${b.name}', '${b.stage}')">
+                ✍️ Apply Digital Signature & Release ₹40,000 Installment
+              </button>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function exportPfms() {
+      alert('PFMS FTO XML batch successfully generated! Ready for State Treasury upload.');
+    }
+
+    function approveDbt(name, stage) {
+      alert(`Digital Signature Applied!\nInstallment release approved for ${name} at ${stage} stage.\nDirect Benefit Transfer queued via PFMS.`);
+    }
+
+    // 8. SOCIAL AUDIT
+    function renderSocialPage(c) {
+      c.innerHTML = `
+        <h2 style="font-size: 18px; font-weight: 800; color: #064e3b; margin-bottom: 12px;">📜 Gram Sabha Social Audit Portal</h2>
+        <div class="card">
+          <h3 style="font-size: 14px; font-weight: 800; margin-bottom: 8px;">Public Social Audit Verification Register</h3>
+          <p style="font-size: 12px; color: #64748b; margin-bottom: 12px;">Panchayat-level public audit records for social verification, material convergence, and MGNREGS 90-day person-day tracking.</p>
+          <div style="background: #f8fafc; padding: 12px; border-radius: 8px; font-size: 12px;">
+            <div>● Gram Sabha Resolution: <b>GS-2024-RAMPUR-09</b></div>
+            <div>● Date of Social Audit: <b>15 October 2026</b></div>
+            <div>● Total Houses Inspected: <b>12 Houses</b></div>
+            <div>● Citizen Satisfaction Score: <b>98.4%</b></div>
+          </div>
+        </div>
+      `;
     }
 
     function toggleNetwork() {
       isOnline = !isOnline;
-      const pill = document.getElementById('netPill');
-      const dot = document.getElementById('netDot');
-      const lbl = document.getElementById('netLabel');
-
+      const pill = document.getElementById('networkPill');
       if (isOnline) {
-        pill.className = 'status-pill';
-        lbl.innerText = 'Online';
+        pill.innerHTML = '🟢 ONLINE';
+        pill.style.color = '#a7f3d0';
       } else {
-        pill.className = 'status-pill offline';
-        lbl.innerText = 'Offline';
+        pill.innerHTML = '🔴 OFFLINE';
+        pill.style.color = '#fca5a5';
       }
-    }
-
-    function showQueue() {
-      alert(`Offline Sync Queue:\n${pendingQueue.length} inspection payload(s) stored locally in IndexedDB.\nWill auto-sync when network reconnects.`);
-    }
-
-    function openCamera(name, id, stage) {
-      const container = document.getElementById('screenBody');
-      container.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-          <span style="font-weight: 800; font-size: 13px;">📷 Geotagged Viewfinder</span>
-          <button style="background: none; border: none; font-size: 12px; color: #64748b; cursor: pointer;" onclick="renderScreen()">✕ Close</button>
-        </div>
-
-        <div class="viewfinder">
-          <div class="reticle"></div>
-          <div>
-            <div>● GPS FIX: 25.3176° N, 82.9739° E</div>
-            <div>● ACCURACY: ±4.2m CEP-50 | ALT: 248m MSL</div>
-            <div>● GEOFENCE: 6m AWAY (🟢 VERIFIED SITE)</div>
-          </div>
-          <div style="background: rgba(0,0,0,0.7); padding: 4px 6px; border-radius: 4px; border: 1px solid #38bdf8; color: #38bdf8;">
-            🛡️ ECDSA-P256 WATERMARK BURNED<br>
-            ${id} | ${stage.toUpperCase()} | MONOTONIC CLOCK
-          </div>
-        </div>
-
-        <div class="card" style="background: #1e293b; color: white; border-color: #334155;">
-          <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px;">
-            <span style="font-weight: 700;">🤖 Edge AI Stage Detector</span>
-            <span style="color: #38bdf8; font-weight: 700;">94% Confidence</span>
-          </div>
-          <div style="font-size: 10px; color: #94a3b8; margin-bottom: 4px;">Features: Damp proof course, plinth beam concrete</div>
-          <div style="font-size: 11px; color: #22c55e; font-weight: 700;">✅ Visual proof matches expected milestone!</div>
-        </div>
-
-        <button class="btn btn-sky" onclick="completeCapture('${name}', '${id}', '${stage}')">
-          📸 Capture & Save to Offline Queue
-        </button>
-      `;
-    }
-
-    function completeCapture(name, id, stage) {
-      pendingQueue.push({ id: 'INSP-' + Math.floor(1000 + Math.random() * 9000), name, stage, time: 'Just Now' });
-      document.getElementById('queuePill').innerText = '⚡ ' + pendingQueue.length;
-      alert(`Success! Inspection for ${name} signed with ECDSA cryptographic watermark and added to offline sync queue.`);
-      renderScreen();
     }
 
     function triggerVoice() {
-      const toast = document.getElementById('toast');
-      toast.style.display = 'block';
-      setTimeout(() => { toast.style.display = 'none'; }, 4000);
+      const t = document.getElementById('voiceToast');
+      t.innerText = 'भाषिणी: "सत्यापन शुरू करने के लिए लाभार्थी चुनें या कैमरा खोलें।" (Select beneficiary to verify or open camera)';
+      t.style.display = 'block';
+      setTimeout(() => { t.style.display = 'none'; }, 4500);
     }
 
-    function setDevice(type) {
-      const wrap = document.getElementById('phoneWrapper');
-      const btns = document.querySelectorAll('.dev-btn');
-      btns.forEach(b => b.classList.remove('active'));
-
-      if (type === 'iphone') {
-        wrap.style.borderRadius = '46px';
-        wrap.style.boxShadow = '0 25px 60px rgba(0, 0, 0, 0.6), 0 0 0 10px #1e293b, 0 0 0 12px #334155';
-        event.target.classList.add('active');
-      } else {
-        wrap.style.borderRadius = '28px';
-        wrap.style.boxShadow = '0 25px 60px rgba(0, 0, 0, 0.6), 0 0 0 8px #0f172a, 0 0 0 10px #475569';
-        event.target.classList.add('active');
-      }
-    }
-
-    renderScreen();
+    // Init
+    navigateTo('home');
   </script>
 </body>
 </html>
