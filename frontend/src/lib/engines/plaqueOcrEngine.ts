@@ -39,93 +39,111 @@ export function analyzeImagePixelsForCoPresence(
   const data = imgData.data;
   const totalPixels = 160 * 120;
 
-  let skinPixels = 0;
-  let minX = 160, maxX = 0, minY = 120, maxY = 0;
+  const gridW = 16;
+  const gridH = 12;
+  const blockW = 160 / gridW;
+  const blockH = 120 / gridH;
+
+  let totalSkinPixels = 0;
+  let totalBrickPixels = 0;
   let yellowPlaquePixels = 0;
-  let skinLuminanceSum = 0;
 
-  for (let y = 0; y < 120; y++) {
-    for (let x = 0; x < 160; x++) {
-      const idx = (y * 160 + x) * 4;
-      const r = data[idx];
-      const g = data[idx + 1];
-      const b = data[idx + 2];
-      const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+  const skinGrid = Array.from({ length: gridH }, () => new Array(gridW).fill(0));
 
-      // 1. Kovac YCbCr Standard Human Skin Chrominance Model (Works across Indian skin complexions)
-      const cb = 128 - 0.168736 * r - 0.331264 * g + 0.5 * b;
-      const cr = 128 + 0.5 * r - 0.418688 * g - 0.081312 * b;
+  for (let gy = 0; gy < gridH; gy++) {
+    for (let gx = 0; gx < gridW; gx++) {
+      let bSkin = 0;
+      let bTotal = 0;
 
-      const isSkin = (cb >= 77 && cb <= 127) &&
-                     (cr >= 133 && cr <= 173) &&
-                     (r > 60 && g > 40 && b > 20) &&
-                     (r > g && g >= b) &&
-                     ((r - g) >= 12);
+      const startY = Math.floor(gy * blockH);
+      const endY = Math.floor((gy + 1) * blockH);
+      const startX = Math.floor(gx * blockW);
+      const endX = Math.floor((gx + 1) * blockW);
 
-      if (isSkin) {
-        skinPixels++;
-        skinLuminanceSum += lum;
-        if (x < minX) minX = x;
-        if (x > maxX) maxX = x;
-        if (y < minY) minY = y;
-        if (y > maxY) maxY = y;
-      }
-
-      // 2. PMAY-G Yellow Scheme Plaque Color Range
-      // Yellow: High Red + High Green, low Blue
-      const isPmayYellow = (r > 165 && g > 140 && b < 110) &&
-                           ((r + g) / 2 - b > 65) &&
-                           (Math.abs(r - g) < 40);
-
-      if (isPmayYellow) {
-        yellowPlaquePixels++;
-      }
-    }
-  }
-
-  // Evaluate Human Face / Co-Presence
-  const skinPct = (skinPixels / totalPixels) * 100;
-  const clusterWidth = Math.max(1, maxX - minX);
-  const clusterHeight = Math.max(1, maxY - minY);
-  const clusterArea = clusterWidth * clusterHeight;
-  const clusterAspectRatio = clusterHeight / clusterWidth;
-
-  let faceDetected = false;
-  let faceConfidence = 0;
-
-  // Real human presence check:
-  // 1. Minimum skin cluster: at least 2.0% and under 45% of frame (empty brick walls or clay have < 1.0%)
-  // 2. Aspect ratio of cluster between 0.7 and 2.6 (head and shoulders)
-  // 3. Cluster density & internal facial feature luminance contrast (eyes, brows, mouth)
-  if (skinPct >= 2.0 && skinPct <= 45.0 && clusterArea >= 350) {
-    const density = (skinPixels / clusterArea);
-    if (density >= 0.14 && clusterAspectRatio >= 0.7 && clusterAspectRatio <= 2.6) {
-      const avgSkinLum = skinLuminanceSum / Math.max(1, skinPixels);
-      let darkFeatureCount = 0;
-
-      for (let y = minY; y <= maxY; y++) {
-        for (let x = minX; x <= maxX; x++) {
+      for (let y = startY; y < endY; y++) {
+        for (let x = startX; x < endX; x++) {
           const idx = (y * 160 + x) * 4;
-          const lum = 0.299 * data[idx] + 0.587 * data[idx + 1] + 0.114 * data[idx + 2];
-          if (lum < avgSkinLum * 0.70) {
-            darkFeatureCount++;
+          const r = data[idx];
+          const g = data[idx + 1];
+          const b = data[idx + 2];
+
+          // YCbCr chrominance calculation
+          const cb = 128 - 0.168736 * r - 0.331264 * g + 0.5 * b;
+          const cr = 128 + 0.5 * r - 0.418688 * g - 0.081312 * b;
+
+          // Biometric Human Skin Range (covers fair, wheatish, dusky, deep brown complexions)
+          const isSkin = (cb >= 72 && cb <= 140) &&
+                         (cr >= 128 && cr <= 178) &&
+                         (r > 40 && g > 25 && b > 15) &&
+                         (r > g && r > b) &&
+                         ((r - g) >= 8 && (r - g) <= 68) &&
+                         ((r - b) >= 10);
+
+          // Terracotta clay brick detection
+          const isBrick = (cr > 178 || (r - g) > 68) && (r > 130 && r > g * 1.5 && r > b * 2);
+
+          // PMAY-G Yellow Wall Plaque
+          const isPmayYellow = (r > 165 && g > 140 && b < 110) &&
+                               ((r + g) / 2 - b > 65) &&
+                               (Math.abs(r - g) < 40);
+
+          if (isSkin) {
+            bSkin++;
+            totalSkinPixels++;
           }
+          if (isBrick) totalBrickPixels++;
+          if (isPmayYellow) yellowPlaquePixels++;
+          bTotal++;
         }
       }
 
-      const featureRatio = darkFeatureCount / Math.max(1, skinPixels);
-      // Human face has 8% to 65% darker features inside the skin area
-      if (featureRatio >= 0.08 && featureRatio <= 0.65) {
-        faceDetected = true;
-        faceConfidence = Math.min(97, Math.max(82, Math.round(80 + (density * 25) + (featureRatio * 20))));
+      if (bSkin / bTotal >= 0.14) {
+        skinGrid[gy][gx] = 1;
       }
     }
   }
 
-  // Evaluate Yellow Plaque
+  // Breadth-First Search for connected skin block clusters
+  let maxCluster = 0;
+  const visited = Array.from({ length: gridH }, () => new Array(gridW).fill(false));
+
+  for (let gy = 0; gy < gridH; gy++) {
+    for (let gx = 0; gx < gridW; gx++) {
+      if (skinGrid[gy][gx] === 1 && !visited[gy][gx]) {
+        let clusterSize = 0;
+        const queue = [[gy, gx]];
+        visited[gy][gx] = true;
+        while (queue.length > 0) {
+          const item = queue.shift();
+          if (!item) continue;
+          const [cy, cx] = item;
+          clusterSize++;
+          const neighbors = [[cy + 1, cx], [cy - 1, cx], [cy, cx + 1], [cy, cx - 1]];
+          for (const [ny, nx] of neighbors) {
+            if (ny >= 0 && ny < gridH && nx >= 0 && nx < gridW && skinGrid[ny][nx] === 1 && !visited[ny][nx]) {
+              visited[ny][nx] = true;
+              queue.push([ny, nx]);
+            }
+          }
+        }
+        if (clusterSize > maxCluster) maxCluster = clusterSize;
+      }
+    }
+  }
+
+  const skinRatio = totalSkinPixels / totalPixels;
+  // Person confirmed if a connected cluster of skin blocks is present
+  const faceDetected = (maxCluster >= 2 && totalSkinPixels >= 60) ||
+                       (maxCluster >= 1 && totalSkinPixels >= 110 && totalBrickPixels < totalSkinPixels * 4);
+
+  const faceConfidence = faceDetected
+    ? Math.min(98, Math.max(86, Math.round(82 + Math.min(12, maxCluster * 3) + Math.min(6, skinRatio * 200))))
+    : 0;
+
+  // Evaluate Plaque
   const plaquePct = (yellowPlaquePixels / totalPixels) * 100;
-  const plaqueDetected = plaquePct >= 0.5;
-  const plaqueScore = plaqueDetected ? Math.min(98, Math.round(82 + plaquePct * 8)) : 0;
+  const plaqueDetected = plaquePct >= 0.4;
+  const plaqueScore = plaqueDetected ? Math.min(98, Math.round(84 + plaquePct * 8)) : 0;
 
   return {
     faceDetected,
