@@ -141,6 +141,48 @@
       }
     } catch(e) {}
 
+    // In-App Government Notification Dialog (Replaces native alert for 100% WebView & Mobile reliability)
+    function showGovTechDialog(msg, title) {
+      const modalTitle = title || 'GraminVikas 360 Notification';
+      let modal = document.getElementById('govTechAlertModal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'govTechAlertModal';
+        modal.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,0.8);backdrop-filter:blur(3px);z-index:999999;display:flex;align-items:center;justify-content:center;padding:16px;';
+        modal.innerHTML = `
+          <div style="background:white;border-radius:12px;max-width:440px;width:100%;box-shadow:0 25px 50px -12px rgba(0,0,0,0.5);border:1px solid #cbd5e1;overflow:hidden;">
+            <div style="background:#064e3b;color:white;padding:14px 18px;display:flex;align-items:center;gap:12px;">
+              <span style="font-size:22px;">🇮🇳</span>
+              <div>
+                <div id="govTechAlertTitle" style="font-weight:800;font-size:14px;">GraminVikas 360</div>
+                <div style="font-size:10px;color:#a7f3d0;">Ministry of Rural Development • PMAY-G</div>
+              </div>
+            </div>
+            <div id="govTechAlertBody" style="padding:18px;font-size:13px;line-height:1.6;color:#1e293b;white-space:pre-wrap;max-height:65vh;overflow-y:auto;word-break:break-word;"></div>
+            <div style="padding:12px 18px;background:#f8fafc;border-top:1px solid #e2e8f0;display:flex;justify-content:flex-end;">
+              <button class="btn btn-primary" onclick="closeGovTechDialog()" style="min-width:90px;padding:8px 18px;font-weight:700;">OK</button>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(modal);
+      }
+      const titleEl = document.getElementById('govTechAlertTitle');
+      const bodyEl = document.getElementById('govTechAlertBody');
+      if (titleEl) titleEl.innerText = modalTitle;
+      if (bodyEl) bodyEl.innerText = msg;
+      modal.style.display = 'flex';
+    }
+
+    function closeGovTechDialog() {
+      const m = document.getElementById('govTechAlertModal');
+      if (m) m.style.display = 'none';
+    }
+
+    // Override window.alert for 100% universal support across all platforms & WebViews
+    window.alert = function(msg) {
+      showGovTechDialog(msg);
+    };
+
     // Master Beneficiary Registry (with persistent modifications)
     let defaultBeneficiaries = [
       { id: 'UP-2024-8841-A', name: 'Ramvati Devi', relation: 'Late Ramesh Chandra', village: 'Khajuraho Purwa', gp: 'Rampur Kalan', block: 'Varanasi', stage: 'plinth', sanction: 120000, paid: 40000, lat: 25.3176, lng: 82.9739, phone: '+91 98765 43210' },
@@ -224,7 +266,7 @@
         time: payload.time,
         salt: 'GOV-IN-NIC-PMAYG-2026'
       });
-      const dataBytes = new TextEncoder().encode(canonical);
+      const dataBytes = (typeof TextEncoder !== 'undefined') ? new TextEncoder().encode(canonical) : new Uint8Array(canonical.split('').map(c => c.charCodeAt(0)));
 
       if (window.crypto && window.crypto.subtle && cryptoKeyPair && cryptoKeyPair.privateKey) {
         try {
@@ -1066,8 +1108,8 @@
       reader.onload = function(e) {
         const img = new Image();
         img.onload = function() {
-          stampGovTechWatermark(img, b, timeStr, 'DEVICE CAMERA INTENT', (dataUrl, aiResult) => {
-            displayCapturedPhoto(dataUrl, b, timeStr, aiResult);
+          stampGovTechWatermark(img, b, timeStr, 'DEVICE CAMERA INTENT', (dataUrl, aiResult, coPresenceResult) => {
+            displayCapturedPhoto(dataUrl, b, timeStr, aiResult, coPresenceResult);
           });
         };
         img.src = e.target.result;
@@ -1087,8 +1129,8 @@
       const path = demoMap[b.stage.toLowerCase()] || 'Demo_Pictures/2_Plinth_Stage/01_Plinth_Level_Retaining_Masonry.jpg';
       const img = new Image();
       img.onload = function() {
-        stampGovTechWatermark(img, b, timeStr, 'OFFICIAL STAGE EVIDENCE PRESET', (dataUrl, aiResult) => {
-          displayCapturedPhoto(dataUrl, b, timeStr, aiResult);
+        stampGovTechWatermark(img, b, timeStr, 'OFFICIAL STAGE EVIDENCE PRESET', (dataUrl, aiResult, coPresenceResult) => {
+          displayCapturedPhoto(dataUrl, b, timeStr, aiResult, coPresenceResult);
         });
       };
       img.onerror = function() {
@@ -1098,17 +1140,19 @@
         cx.fillStyle = '#1e293b'; cx.fillRect(0, 0, 1280, 720);
         cx.fillStyle = '#38bdf8'; cx.font = 'bold 36px monospace';
         cx.fillText('PMAY-G MILESTONE EVIDENCE: ' + b.stage.toUpperCase(), 300, 360);
-        stampGovTechWatermark(c, b, timeStr, 'EVIDENCE PRESET', (dataUrl, aiResult) => {
-          displayCapturedPhoto(dataUrl, b, timeStr, aiResult);
+        stampGovTechWatermark(c, b, timeStr, 'EVIDENCE PRESET', (dataUrl, aiResult, coPresenceResult) => {
+          displayCapturedPhoto(dataUrl, b, timeStr, aiResult, coPresenceResult);
         });
       };
       img.src = path;
     }
 
+    let latestAiResult = null;
     let latestCoPresenceResult = null;
 
     function displayCapturedPhoto(dataUrl, b, timeStr, aiResult, coPresenceResult) {
       currentCapturedPhotoData = dataUrl;
+      latestAiResult = aiResult;
       latestCoPresenceResult = coPresenceResult;
       const viewArea = document.getElementById('cameraViewArea');
       const prevArea = document.getElementById('photoPreviewArea');
@@ -1170,6 +1214,7 @@
 
     function saveInspection(benId, name, stage, timeStr) {
       const coPresVerified = latestCoPresenceResult ? latestCoPresenceResult.humanDetected : false;
+      const currentScore = (latestAiResult && latestAiResult.confidence) ? latestAiResult.confidence : '96.8%';
       offlineQueue.unshift({
         id: 'INSP-' + Math.floor(1000 + Math.random() * 9000),
         benId,
@@ -1182,7 +1227,7 @@
         time: timeStr,
         sig: currentActiveSig,
         photoDataUrl: currentCapturedPhotoData,
-        aiScore: '96.8%',
+        aiScore: currentScore,
         coPresenceVerified: coPresVerified,
         synced: false
       });
@@ -1400,11 +1445,58 @@
 
     function trackBen() {
       const q = document.getElementById('citQuery').value.trim();
-      const b = beneficiaries.find(x => x.id === q || x.name.toLowerCase().includes(q.toLowerCase()));
-      if (b) {
+      const b = beneficiaries.find(x => x.id.toLowerCase() === q.toLowerCase() || x.name.toLowerCase().includes(q.toLowerCase()));
+      const resEl = document.getElementById('citResult');
+      if (b && resEl) {
+        const pending = Math.max(0, b.sanction - b.paid);
+        const stages = ['foundation', 'plinth', 'lintel', 'roof', 'completed'];
+        const curIdx = stages.indexOf(b.stage.toLowerCase());
+        
+        resEl.innerHTML = `
+          <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+              <div>
+                <h3 style="font-size: 17px; font-weight: 800;">${b.name}</h3>
+                <div style="font-size: 12px; color: #64748b;">PMAY-G ID: <b>${b.id}</b> • Village: ${b.village}</div>
+                <div style="font-size: 11px; color: #64748b;">Gram Panchayat: ${b.gp}, Block: ${b.block}</div>
+              </div>
+              <span class="badge badge-${b.stage}">${b.stage.toUpperCase()} VERIFIED</span>
+            </div>
+
+            <!-- Financial Cards -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; background: #f8fafc; padding: 10px; border-radius: 8px; margin-bottom: 14px;">
+              <div style="text-align: center;"><div style="font-size: 10px; color: #64748b;">TOTAL SANCTION</div><div style="font-size: 14px; font-weight: 800;">₹${b.sanction.toLocaleString('en-IN')}</div></div>
+              <div style="text-align: center;"><div style="font-size: 10px; color: #64748b;">DBT CREDITED</div><div style="font-size: 14px; font-weight: 800; color: #059669;">₹${b.paid.toLocaleString('en-IN')}</div></div>
+              <div style="text-align: center;"><div style="font-size: 10px; color: #64748b;">PENDING</div><div style="font-size: 14px; font-weight: 800; color: #d97706;">₹${pending.toLocaleString('en-IN')}</div></div>
+            </div>
+
+            <!-- Milestone Tracker -->
+            <h4 style="font-size: 12px; font-weight: 800; color: #334155; text-transform: uppercase; margin-bottom: 8px;">Milestone Verification Timeline</h4>
+            <div style="display: flex; gap: 6px; margin-bottom: 14px;">
+              ${stages.slice(0, 4).map((stg, i) => {
+                const isPassed = curIdx >= i;
+                const isCurrent = curIdx === i;
+                const bg = isPassed ? '#dcfce7' : (isCurrent ? '#e0f2fe' : '#f1f5f9');
+                const titleColor = isPassed ? '#166534' : (isCurrent ? '#0369a1' : '#64748b');
+                const statusColor = isPassed ? '#15803d' : (isCurrent ? '#0284c7' : '#94a3b8');
+                const statusText = isPassed ? '✓ Approved' : (isCurrent ? 'In Progress' : 'Pending');
+                return `
+                  <div style="flex: 1; background: ${bg}; padding: 8px; border-radius: 6px; text-align: center; font-size: 11px;">
+                    <div style="font-weight: 700; color: ${titleColor};">${stg.charAt(0).toUpperCase() + stg.slice(1)}</div>
+                    <div style="color: ${statusColor}; font-size: 10px;">${statusText}</div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+
+            <div style="font-size: 11px; color: #475569; border-top: 1px solid #e2e8f0; padding-top: 8px;">
+              🛡️ Geotagged Milestone: ${b.lat}° N, ${b.lng}° E • Digital Audit Verified by JE FO-8821
+            </div>
+          </div>
+        `;
         alert(`Details retrieved for ${b.name} (${b.id})\nStage: ${b.stage.toUpperCase()}\nSanction: ₹${b.sanction.toLocaleString('en-IN')}\nDisbursed: ₹${b.paid.toLocaleString('en-IN')}`);
       } else {
-        alert('Beneficiary ID ' + q + ' verified. Status: In Good Standing.');
+        alert('Beneficiary ID "' + q + '" not found in offline records.');
       }
     }
 
@@ -1491,11 +1583,14 @@ Ready for State Treasury / PFMS Portal upload.`);
       const b = beneficiaries.find(x => x.id === id);
       if (b) {
         b.paid += 40000;
+        const stageSeq = ['foundation', 'plinth', 'lintel', 'roof', 'completed'];
+        const curIdx = stageSeq.indexOf(b.stage.toLowerCase());
+        if (curIdx >= 0 && curIdx < stageSeq.length - 1) {
+          b.stage = stageSeq[curIdx + 1];
+        }
         saveBeneficiaries();
       }
-      alert(`Digital Signature Applied!
-Installment release approved for ${name} at ${stage.toUpperCase()} stage.
-Direct Benefit Transfer queued via PFMS (₹40,000 credited).`);
+      alert(`Digital Signature Applied!\nInstallment release approved for ${name} at ${stage.toUpperCase()} stage.\nDirect Benefit Transfer queued via PFMS (₹40,000 credited).`);
       renderAdminPage(document.getElementById('appBody'));
     }
 
@@ -1530,9 +1625,19 @@ Direct Benefit Transfer queued via PFMS (₹40,000 credited).`);
 
     function triggerVoice() {
       const t = document.getElementById('voiceToast');
-      t.innerText = 'भाषिणी: "सत्यापन शुरू करने के लिए लाभार्थी चुनें या कैमरा खोलें।" (Select beneficiary to verify or open camera)';
+      const text = 'सत्यापन शुरू करने के लिए लाभार्थी चुनें या कैमरा खोलें। (Select beneficiary to verify or open camera)';
+      t.innerText = 'भाषिणी AI: "' + text + '"';
       t.style.display = 'block';
       setTimeout(() => { t.style.display = 'none'; }, 4500);
+      try {
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+          const ut = new SpeechSynthesisUtterance('सत्यापन शुरू करने के लिए लाभार्थी चुनें');
+          ut.lang = 'hi-IN';
+          ut.rate = 0.95;
+          window.speechSynthesis.speak(ut);
+        }
+      } catch(e) {}
     }
 
     // Init
