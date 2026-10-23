@@ -1,0 +1,8 @@
+<resources>
+    <style name="Theme.GraminVikas360" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#064e3b</item>
+        <item name="colorPrimaryDark">#022c22</item>
+        <item name="colorAccent">#059669</item>
+        <item name="android:statusBarColor">#064e3b</item>
+    </style>
+</resources>
