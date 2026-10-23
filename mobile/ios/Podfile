@@ -1,0 +1,6 @@
+platform :ios, '14.0'
+use_frameworks! :linkage => :static
+
+target 'GraminVikas360' do
+  # Standard React Native & Expo iOS Pods
+end

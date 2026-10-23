@@ -1,0 +1,30 @@
+{
+  "name": "graminvikas-360-mobile",
+  "version": "2.0.0",
+  "description": "GraminVikas 360 v2.0 - Official iOS and Android Mobile App for PMAY-G Rural Housing & Panchayat Monitoring",
+  "main": "App.tsx",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "preview": "node serve-preview.js"
+  },
+  "dependencies": {
+    "expo": "~51.0.0",
+    "expo-status-bar": "~1.12.1",
+    "react": "18.2.0",
+    "react-native": "0.74.5",
+    "react-native-safe-area-context": "4.10.5",
+    "@react-native-async-storage/async-storage": "1.23.1",
+    "expo-location": "~17.0.1",
+    "expo-camera": "~15.0.13",
+    "expo-image-picker": "~15.0.7"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0",
+    "@types/react": "~18.2.45",
+    "typescript": "^5.3.0"
+  },
+  "private": true
+}

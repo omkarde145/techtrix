@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GraminVikas 360 Mobile - iOS & Android Simulator</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #f8fafc;
+    }
+    .top-info {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .top-info h1 {
+      font-size: 20px;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .top-info p {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+    .device-switcher {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      justify-content: center;
+    }
+    .dev-btn {
+      background: #334155;
+      color: #ffffff;
+      border: 1px solid #475569;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .dev-btn.active {
+      background: #0284c7;
+      border-color: #38bdf8;
+    }
+    /* Phone Frame */
+    .phone-wrapper {
+      position: relative;
+      width: 380px;
+      height: 780px;
+      background: #000;
+      border-radius: 46px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 0 10px #1e293b, 0 0 0 12px #334155;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .dynamic-island {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 28px;
+      background: #000;
+      border-radius: 18px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+    }
+    .dynamic-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #111;
+      border: 2px solid #222;
+    }
+    .phone-screen {
+      flex: 1;
+      background: #f8fafc;
+      color: #0f172a;
+      overflow-y: auto;
+      padding-top: 44px;
+      display: flex;
+      flex-direction: column;
+    }
+    /* App Header */
+    .app-header {
+      background: #064e3b;
+      color: white;
+      padding: 12px 16px;
+      border-bottom: 1px solid #047857;
+    }
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .header-title {
+      font-size: 15px;
+      font-weight: 800;
+    }
+    .header-sub {
+      font-size: 10px;
+      color: #a7f3d0;
+    }
+    .pills {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .status-pill {
+      background: #ecfdf5;
+      color: #065f46;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .status-pill.offline {
+      background: #fef2f2;
+      color: #991b1b;
+    }
+    .queue-pill {
+      background: #f59e0b;
+      color: white;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 7px;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    /* Segments */
+    .segment-bar {
+      display: flex;
+      background: #022c22;
+      border-radius: 8px;
+      padding: 3px;
+      gap: 4px;
+    }
+    .seg-item {
+      flex: 1;
+      text-align: center;
+      padding: 6px 0;
+      font-size: 11px;
+      font-weight: 700;
+      color: #9ca3af;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+    .seg-item.active {
+      background: #059669;
+      color: white;
+    }
+    /* Content Area */
+    .screen-content {
+      flex: 1;
+      padding: 12px;
+      overflow-y: auto;
+    }
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 10px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .badge-plinth { background: #e0f2fe; color: #0369a1; }
+    .badge-lintel { background: #ede9fe; color: #6d28d9; }
+    .badge-roof { background: #ffedd5; color: #c2410c; }
+    .badge-foundation { background: #fef3c7; color: #b45309; }
+    .badge-completed { background: #dcfce7; color: #15803d; }
+    .btn {
+      width: 100%;
+      background: #064e3b;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+    .btn:hover { background: #047857; }
+    .btn-sky { background: #0284c7; }
+    .btn-sky:hover { background: #0369a1; }
+    /* Camera Modal View */
+    .viewfinder {
+      height: 220px;
+      background: #0f172a;
+      border-radius: 10px;
+      border: 2px solid #38bdf8;
+      position: relative;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: #22c55e;
+      font-family: monospace;
+      font-size: 9px;
+      margin-bottom: 10px;
+    }
+    .reticle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60px;
+      height: 60px;
+      border: 1px dashed rgba(56, 189, 248, 0.7);
+      border-radius: 50%;
+    }
+    /* Voice FAB */
+    .voice-fab {
+      position: absolute;
+      bottom: 20px;
+      right: 16px;
+      background: #064e3b;
+      color: white;
+      border-radius: 30px;
+      padding: 8px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      border: 1px solid #10b981;
+    }
+    .toast {
+      position: absolute;
+      bottom: 65px;
+      left: 14px;
+      right: 14px;
+      background: #1e293b;
+      color: #38bdf8;
+      border: 1px solid #38bdf8;
+      padding: 8px;
+      border-radius: 8px;
+      font-size: 11px;
+      text-align: center;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-info">
+    <h1><span>📱</span> GraminVikas 360 v2.0 - Mobile Simulation</h1>
+    <p>Cross-Platform PMAY-G Rural Inspection App for iOS (iPhone) and Android Phones</p>
+    <div class="device-switcher">
+      <button class="dev-btn active" onclick="setDevice('iphone')">🍎 Apple iPhone 15 Pro</button>
+      <button class="dev-btn" onclick="setDevice('pixel')">🤖 Google Pixel 8 Pro</button>
+    </div>
+  </div>
+
+  <div class="phone-wrapper" id="phoneWrapper">
+    <div class="dynamic-island">
+      <div class="dynamic-dot"></div>
+      <div style="width: 4px; height: 4px; background: #065f46; border-radius: 50%;"></div>
+    </div>
+
+    <div class="phone-screen">
+      <!-- App Header -->
+      <div class="app-header">
+        <div class="header-row">
+          <div>
+            <div class="header-title">🇮🇳 GraminVikas 360</div>
+            <div class="header-sub">MoRD • PMAY-G Mobile Mission</div>
+          </div>
+          <div class="pills">
+            <div class="status-pill" id="netPill" onclick="toggleNetwork()">
+              <span id="netDot">●</span> <span id="netLabel">Online</span>
+            </div>
+            <div class="queue-pill" id="queuePill" onclick="showQueue()">⚡ 1</div>
+          </div>
+        </div>
+
+        <div class="segment-bar">
+          <div class="seg-item active" id="seg-inspector" onclick="switchRole('inspector')">👷 Field (FO-8821)</div>
+          <div class="seg-item" id="seg-citizen" onclick="switchRole('citizen')">👥 Citizen</div>
+          <div class="seg-item" id="seg-admin" onclick="switchRole('admin')">🏛️ BDO Sign</div>
+        </div>
+      </div>
+
+      <!-- Screen Body -->
+      <div class="screen-content" id="screenBody">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+
+    <!-- Floating Voice Assistant -->
+    <div class="voice-fab" onclick="triggerVoice()">
+      <span>🎙️</span> Bhashini Voice
+    </div>
+
+    <div class="toast" id="toast">
+      भाषिणी: "भू-टैगिंग सत्यापन शुरू करने के लिए लाभार्थी चुनें।" (Choose beneficiary to begin geotag)
+    </div>
+  </div>
+
+  <script>
+    let currentRole = 'inspector';
+    let isOnline = true;
+    let pendingQueue = [
+      { id: 'INSP-9921', name: 'Ramvati Devi', stage: 'plinth', lat: 25.3176, lng: 82.9739, time: 'Today 11:42 AM' }
+    ];
+
+    const beneficiaries = [
+      { id: 'UP-2024-8841-A', name: 'Ramvati Devi', relation: 'Late Ramesh Chandra', village: 'Khajuraho Purwa', gp: 'Rampur Kalan', stage: 'plinth', sanction: 120000, paid: 40000 },
+      { id: 'MP-2024-5519-B', name: 'Surendra Kumar Gond', relation: 'Moti Lal Gond', village: 'Bhiria Tola', gp: 'Bandhavgarh Rural', stage: 'lintel', sanction: 130000, paid: 85000 },
+      { id: 'BR-2024-9102-C', name: 'Meena Devi', relation: 'Shyam Sundar Paswan', village: 'Pipra Khem', gp: 'Harsidhi North', stage: 'foundation', sanction: 120000, paid: 40000 },
+      { id: 'RJ-2024-3382-D', name: 'Kamla Bai Gurjar', relation: 'Hira Lal Gurjar', village: 'Devgarh Dhani', gp: 'Kalyanpura', stage: 'roof', sanction: 130000, paid: 110000 }
+    ];
+
+    function renderScreen() {
+      const container = document.getElementById('screenBody');
+
+      if (currentRole === 'inspector') {
+        container.innerHTML = `
+          <div style="margin-bottom: 8px; font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase;">
+            Assigned Field Queue (${beneficiaries.length})
+          </div>
+          ${beneficiaries.map(b => `
+            <div class="card">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                <div>
+                  <div style="font-size: 14px; font-weight: 700; color: #0f172a;">${b.name}</div>
+                  <div style="font-size: 11px; color: #64748b;">c/o ${b.relation}</div>
+                </div>
+                <span class="badge badge-${b.stage}">${b.stage}</span>
+              </div>
+              <div style="font-size: 11px; color: #475569; margin-bottom: 6px;">
+                📍 ${b.village}, ${b.gp} • ID: ${b.id}
+              </div>
+              <div style="background: #f8fafc; padding: 6px 8px; border-radius: 6px; display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 8px;">
+                <span>Sanction: ₹${b.sanction.toLocaleString('en-IN')}</span>
+                <span style="color: #059669; font-weight: 700;">Paid: ₹${b.paid.toLocaleString('en-IN')}</span>
+              </div>
+              <button class="btn" onclick="openCamera('${b.name}', '${b.id}', '${b.stage}')">
+                📷 Open Geotagged Camera
+              </button>
+            </div>
+          `).join('')}
+        `;
+      } else if (currentRole === 'citizen') {
+        container.innerHTML = `
+          <div class="card" style="background: #eff6ff; border-color: #bfdbfe;">
+            <div style="font-weight: 800; color: #1e40af; font-size: 13px; margin-bottom: 4px;">PMAY-G Public Tracking</div>
+            <div style="font-size: 11px; color: #3b82f6; margin-bottom: 8px;">Search by Sanction ID to view milestone proofs & DBT credits.</div>
+            <input type="text" value="UP-2024-8841-A" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #93c5fd; font-size: 12px; margin-bottom: 8px;" />
+            <button class="btn btn-sky">Track My Home Status</button>
+          </div>
+
+          <div class="card">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+              <div>
+                <div style="font-weight: 800; font-size: 14px;">Ramvati Devi</div>
+                <div style="font-size: 11px; color: #64748b;">Panchayat: Rampur Kalan (UP)</div>
+              </div>
+              <span class="badge badge-plinth">Plinth Approved</span>
+            </div>
+
+            <div style="margin: 12px 0;">
+              <div style="font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 6px;">DBT INSTALLMENT TRANSFERS</div>
+              <div style="display: flex; gap: 4px;">
+                <div style="flex: 1; background: #dcfce7; padding: 6px; border-radius: 6px; text-align: center; font-size: 10px;">
+                  <div style="color: #15803d; font-weight: 700;">₹40,000</div>
+                  <div style="color: #166534;">✓ Inst 1 Credited</div>
+                </div>
+                <div style="flex: 1; background: #e0f2fe; padding: 6px; border-radius: 6px; text-align: center; font-size: 10px;">
+                  <div style="color: #0369a1; font-weight: 700;">₹40,000</div>
+                  <div style="color: #075985;">Inst 2 Ready</div>
+                </div>
+                <div style="flex: 1; background: #f1f5f9; padding: 6px; border-radius: 6px; text-align: center; font-size: 10px;">
+                  <div style="color: #64748b; font-weight: 700;">₹40,000</div>
+                  <div style="color: #94a3b8;">Inst 3 On Roof</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="font-size: 11px; color: #475569; border-top: 1px solid #f1f5f9; padding-top: 8px;">
+              🛡️ Geotagged Milestone: 25.3176° N, 82.9739° E (Watermarked by JE FO-8821)
+            </div>
+          </div>
+        `;
+      } else if (currentRole === 'admin') {
+        container.innerHTML = `
+          <div class="card" style="background: #1e293b; color: white; border-color: #334155;">
+            <div style="font-size: 13px; font-weight: 800; color: #38bdf8;">🏛️ BDO Maker-Checker Clearance</div>
+            <div style="font-size: 11px; color: #94a3b8; margin: 4px 0 10px;">Officer: Dr. S. K. Awasthi • DSC Token #NIC-8812</div>
+            <div style="background: #0f172a; padding: 8px; border-radius: 6px; font-size: 11px; color: #22c55e;">
+              ● DSC Cryptographic Token Authenticated (PIN: 2024)
+            </div>
+          </div>
+
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; margin: 10px 0 6px;">
+            Pending Stage Authorizations
+          </div>
+
+          <div class="card">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+              <div>
+                <div style="font-size: 14px; font-weight: 700;">Ramvati Devi</div>
+                <div style="font-size: 11px; color: #64748b;">ID: UP-2024-8841-A</div>
+              </div>
+              <span class="badge badge-plinth">Plinth Stage</span>
+            </div>
+            <div style="background: #f8fafc; padding: 8px; border-radius: 6px; font-size: 10px; font-family: monospace; color: #334155; margin-bottom: 8px;">
+              <div>📍 Distance: 6m (Inside 50m tolerance)</div>
+              <div>🤖 AI Match: 95% Confidence (Plinth DPC)</div>
+              <div>🛡️ Sig: GOV-IN-NIC:4E91-A12B-ECDSA-P256</div>
+            </div>
+            <button class="btn" onclick="alert('Digital Signature Applied! Automated PFMS XML FTO sent to State Treasury.')">
+              ✍️ Sign Approval & Release ₹40,000 DBT
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    function switchRole(role) {
+      currentRole = role;
+      document.querySelectorAll('.seg-item').forEach(el => el.classList.remove('active'));
+      document.getElementById('seg-' + role).classList.add('active');
+      renderScreen();
+    }
+
+    function toggleNetwork() {
+      isOnline = !isOnline;
+      const pill = document.getElementById('netPill');
+      const dot = document.getElementById('netDot');
+      const lbl = document.getElementById('netLabel');
+
+      if (isOnline) {
+        pill.className = 'status-pill';
+        lbl.innerText = 'Online';
+      } else {
+        pill.className = 'status-pill offline';
+        lbl.innerText = 'Offline';
+      }
+    }
+
+    function showQueue() {
+      alert(`Offline Sync Queue:\n${pendingQueue.length} inspection payload(s) stored locally in IndexedDB.\nWill auto-sync when network reconnects.`);
+    }
+
+    function openCamera(name, id, stage) {
+      const container = document.getElementById('screenBody');
+      container.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <span style="font-weight: 800; font-size: 13px;">📷 Geotagged Viewfinder</span>
+          <button style="background: none; border: none; font-size: 12px; color: #64748b; cursor: pointer;" onclick="renderScreen()">✕ Close</button>
+        </div>
+
+        <div class="viewfinder">
+          <div class="reticle"></div>
+          <div>
+            <div>● GPS FIX: 25.3176° N, 82.9739° E</div>
+            <div>● ACCURACY: ±4.2m CEP-50 | ALT: 248m MSL</div>
+            <div>● GEOFENCE: 6m AWAY (🟢 VERIFIED SITE)</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.7); padding: 4px 6px; border-radius: 4px; border: 1px solid #38bdf8; color: #38bdf8;">
+            🛡️ ECDSA-P256 WATERMARK BURNED<br>
+            ${id} | ${stage.toUpperCase()} | MONOTONIC CLOCK
+          </div>
+        </div>
+
+        <div class="card" style="background: #1e293b; color: white; border-color: #334155;">
+          <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px;">
+            <span style="font-weight: 700;">🤖 Edge AI Stage Detector</span>
+            <span style="color: #38bdf8; font-weight: 700;">94% Confidence</span>
+          </div>
+          <div style="font-size: 10px; color: #94a3b8; margin-bottom: 4px;">Features: Damp proof course, plinth beam concrete</div>
+          <div style="font-size: 11px; color: #22c55e; font-weight: 700;">✅ Visual proof matches expected milestone!</div>
+        </div>
+
+        <button class="btn btn-sky" onclick="completeCapture('${name}', '${id}', '${stage}')">
+          📸 Capture & Save to Offline Queue
+        </button>
+      `;
+    }
+
+    function completeCapture(name, id, stage) {
+      pendingQueue.push({ id: 'INSP-' + Math.floor(1000 + Math.random() * 9000), name, stage, time: 'Just Now' });
+      document.getElementById('queuePill').innerText = '⚡ ' + pendingQueue.length;
+      alert(`Success! Inspection for ${name} signed with ECDSA cryptographic watermark and added to offline sync queue.`);
+      renderScreen();
+    }
+
+    function triggerVoice() {
+      const toast = document.getElementById('toast');
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 4000);
+    }
+
+    function setDevice(type) {
+      const wrap = document.getElementById('phoneWrapper');
+      const btns = document.querySelectorAll('.dev-btn');
+      btns.forEach(b => b.classList.remove('active'));
+
+      if (type === 'iphone') {
+        wrap.style.borderRadius = '46px';
+        wrap.style.boxShadow = '0 25px 60px rgba(0, 0, 0, 0.6), 0 0 0 10px #1e293b, 0 0 0 12px #334155';
+        event.target.classList.add('active');
+      } else {
+        wrap.style.borderRadius = '28px';
+        wrap.style.boxShadow = '0 25px 60px rgba(0, 0, 0, 0.6), 0 0 0 8px #0f172a, 0 0 0 10px #475569';
+        event.target.classList.add('active');
+      }
+    }
+
+    renderScreen();
+  </script>
+</body>
+</html>

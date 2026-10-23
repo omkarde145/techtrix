@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
+    <key>CFBundleDisplayName</key>
+    <string>GraminVikas 360</string>
+    <key>CFBundleExecutable</key>
+    <string>$(EXECUTABLE_NAME)</string>
+    <key>CFBundleIdentifier</key>
+    <string>in.gov.mord.graminvikas360</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>$(PRODUCT_NAME)</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>2.0.0</string>
+    <key>CFBundleSignature</key>
+    <string>????</string>
+    <key>CFBundleVersion</key>
+    <string>2</string>
+    <key>LSRequiresIPhoneOS</key>
+    <true/>
+    
+    <!-- Privacy Descriptions for iOS App Store -->
+    <key>NSCameraUsageDescription</key>
+    <string>GraminVikas 360 requires camera access to capture tamper-proof geotagged inspection photos of PMAY-G houses.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>GraminVikas 360 requires high-accuracy GPS coordinates to verify physical house construction sites against spatial geo-fences.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Allows field inspectors to upload saved milestone pictures for verification.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Allows inspectors to record audio notes and use the Bhashini Hindi/English voice assistant.</string>
+    
+    <key>UILaunchStoryboardName</key>
+    <string>SplashScreen</string>
+    <key>UIRequiredDeviceCapabilities</key>
+    <array>
+        <string>armv7</string>
+    </array>
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+    </array>
+    <key>UIViewControllerBasedStatusBarAppearance</key>
+    <false/>
+</dict>
+</plist>

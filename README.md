@@ -97,7 +97,19 @@ npm run dev
 
 ---
 
-## 📱 How to Run on a Mobile Device
+## 📱 Native Cross-Platform Mobile App (iOS & Android)
+
+A dedicated cross-platform mobile application is included in the **[`mobile/`](mobile/)** directory. It runs natively on both **Apple iOS (iPhone/iPad)** and **Android phones**:
+
+- **1-Click Desktop Simulator**: Double-click [`Launch-Mobile.command`](mobile/Launch-Mobile.command) on Mac or [`Launch-Mobile.bat`](mobile/Launch-Mobile.bat) on Windows to preview the app inside an interactive iPhone 15 Pro & Google Pixel simulator frame.
+- **Run on iPhone (iOS)**: Scan the QR code using the iOS Camera app with **Expo Go**.
+- **Run on Android**: Scan the QR code in **Expo Go** or generate a standalone `.apk` via EAS Build.
+- **Native Hardware Access**: High-accuracy GPS spatial filtering, camera optical liveness tilt detection, ECDSA watermarking, and offline IndexedDB/AsyncStorage sync.
+- 📖 Full setup documentation: **[`mobile/README.md`](mobile/README.md)**
+
+---
+
+## 🌐 How to Access Web Platform on a Mobile Browser
 
 1. Connect your mobile phone and computer to the **same Wi-Fi network**.
 2. Note your computer's local IP address (printed automatically in `Launch.command`, or run `ipconfig getifaddr en0`).

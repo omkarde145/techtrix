@@ -1,0 +1,40 @@
+{
+  "expo": {
+    "name": "GraminVikas 360",
+    "slug": "graminvikas-360",
+    "version": "2.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#064e3b",
+      "resizeMode": "contain"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "in.gov.mord.graminvikas360",
+      "infoPlist": {
+        "NSCameraUsageDescription": "GraminVikas 360 requires camera access to capture tamper-proof geotagged inspection photos of PMAY-G houses.",
+        "NSLocationWhenInUseUsageDescription": "GraminVikas 360 requires high-accuracy GPS coordinates to verify physical house construction sites against spatial geo-fences.",
+        "NSPhotoLibraryUsageDescription": "Allows field inspectors to upload saved milestone pictures for verification."
+      }
+    },
+    "android": {
+      "package": "in.gov.mord.graminvikas360",
+      "versionCode": 2,
+      "adaptiveIcon": {
+        "backgroundColor": "#064e3b"
+      },
+      "permissions": [
+        "CAMERA",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
