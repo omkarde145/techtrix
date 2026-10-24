@@ -82,10 +82,10 @@ function createStagePhotoSvg(stageName: string, stageColor: string, details: str
 }
 
 export const STAGE_PHOTOS = {
-  foundation: createStagePhotoSvg('FOUNDATION', '#d97706', ['Excavation Depth: 1.2m', 'PCC 1:3:6 Base']),
-  plinth: createStagePhotoSvg('PLINTH', '#2563eb', ['DPC Level Beam Cast', 'Brick Masonry Complete']),
-  lintel: createStagePhotoSvg('LINTEL', '#7c3aed', ['Lintel Bands Placed', 'Superstructure Masonry']),
-  completion: createStagePhotoSvg('COMPLETION', '#16a34a', ['RCC Roof Slab Cured', 'PMAY-G Yellow Wall Plaque Installed'])
+  foundation: '/demo-pictures/1_Foundation_Stage/01_Trench_Excavation_and_Footing.jpg',
+  plinth: '/demo-pictures/2_Plinth_Stage/01_Plinth_Level_Retaining_Masonry.jpg',
+  lintel: '/demo-pictures/3_Lintel_Stage/01_Rural_Brick_Walls_Up_To_Lintel.jpg',
+  completion: '/demo-pictures/4_Completion_Stage/01_Completed_PMAY_Pucca_House.jpg'
 };
 
 export const SEED_JE_CLEARANCE: JeTechnicalClearance = {
@@ -762,7 +762,7 @@ export const SEED_PANCHAYAT_WORKS: PanchayatDevelopmentWork[] = [
     longitude: 85.3295,
     status: 'in_progress',
     lastInspectedAt: '2024-05-25T11:00:00Z',
-    photoUrl: createStagePhotoSvg('CIVIC WORK', '#0284c7', ['Solar Drinking Water Facility', '15th Finance Commission'])
+    photoUrl: '/demo-pictures/5_Civic_Panchayat_Works/04_Community_Water_Facility.jpg'
   },
   {
     id: 'PW-JH-BISH-02',
@@ -782,7 +782,7 @@ export const SEED_PANCHAYAT_WORKS: PanchayatDevelopmentWork[] = [
     longitude: 85.3350,
     status: 'in_progress',
     lastInspectedAt: '2024-05-18T14:30:00Z',
-    photoUrl: createStagePhotoSvg('FOUNDATION', '#d97706', ['Anganwadi Centre Substructure', 'MGNREGS Convergence'])
+    photoUrl: '/demo-pictures/1_Foundation_Stage/02_Reinforced_Ground_Footing.jpg'
   },
   {
     id: 'PW-JH-CHAS-01',
@@ -802,7 +802,7 @@ export const SEED_PANCHAYAT_WORKS: PanchayatDevelopmentWork[] = [
     longitude: 86.1710,
     status: 'completed',
     lastInspectedAt: '2024-04-15T16:00:00Z',
-    photoUrl: createStagePhotoSvg('COMPLETION', '#16a34a', ['Village CC Paver Road', 'RWD & Gram Panchayat'])
+    photoUrl: '/demo-pictures/5_Civic_Panchayat_Works/02_Rural_Connectivity_Road.jpg'
   },
   {
     id: 'PW-JH-CHAS-02',
@@ -822,7 +822,7 @@ export const SEED_PANCHAYAT_WORKS: PanchayatDevelopmentWork[] = [
     longitude: 86.1835,
     status: 'in_progress',
     lastInspectedAt: '2024-05-20T10:15:00Z',
-    photoUrl: createStagePhotoSvg('LINTEL', '#7c3aed', ['Community Welfare Centre', 'DMFT Scheme'])
+    photoUrl: '/demo-pictures/3_Lintel_Stage/02_Superstructure_Brick_Masonry.jpg'
   }
 ];
 
